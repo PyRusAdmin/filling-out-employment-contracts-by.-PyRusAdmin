@@ -1,7 +1,17 @@
 from docxtpl import DocxTemplate
 import openpyxl as op
 from datetime import datetime
+from g4f.client import Client
 
+def gender_definition():
+    """Гендерная идентификация"""
+    client = Client()
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": "Hello"}],
+        # ...
+    )
+    print(response.choices[0].message.content)
 
 def open_list_gup():
     wb = op.load_workbook('list_gup/Списочный_состав.xlsx')  # открываем файл
@@ -37,8 +47,9 @@ def format_date(date):
 
 
 if __name__ == '__main__':
-    parsed_data = open_list_gup()
-    for row in parsed_data:
-        print(row)
-        formatted_date = format_date(row[3])
-        creation_contracts(row, formatted_date)
+    gender_definition() # Гендерная идентификация
+    # parsed_data = open_list_gup()
+    # for row in parsed_data:
+    #     print(row)
+    #     formatted_date = format_date(row[3])
+    #     creation_contracts(row, formatted_date)
