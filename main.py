@@ -1,28 +1,19 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 import sqlite3
 import openpyxl as op
 from docxtpl import DocxTemplate
-from gigachat import GigaChat
-import configparser
+
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from openpyxl import load_workbook
+from loguru import logger
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-token = config['token']['token']
-
-
-def gigachat(employee_name):
-    # Используйте токен, полученный в личном кабинете из поля Авторизационные данные
-    with GigaChat(credentials=token, verify_ssl_certs=False) as giga:
-        response = giga.chat(f"Напиши в родительном падеже: {employee_name}")
-        print(response.choices[0].message.content)
-        return response.choices[0].message.content
+logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 
 def opening_a_file():
-    """Открытие файла Excel"""
+    """Открытие файла Excel выбором файла"""
     root = Tk()
     root.withdraw()
     filename = askopenfilename(filetypes=[('Excel Files', '*.xlsx')])
@@ -55,7 +46,7 @@ def po_parsing_jul_2023():
         issue_date = str(row[5])
         issued_by = str(row[6])
         code = str(row[7])
-        print(service_number, full_name, phone, address, series_number, issue_date, issued_by, code)
+        logger.info(service_number, full_name, phone, address, series_number, issue_date, issued_by, code)
         # Проверяем, существует ли запись с таким табельным номером в базе данных
         cursor.execute('SELECT * FROM parsing WHERE service_number = ?', (service_number,))
         existing_row = cursor.fetchone()
@@ -74,22 +65,21 @@ def comparing_property():
     # Загружаем файл Excel для записи результатов
     result_workbook = load_workbook(filename='list_gup/Списочный_состав.xlsx')
     result_sheet = result_workbook.active
-    cursor.execute(
-        'SELECT service_number, full_name, phone, address, series_number, issue_date, issued_by, code FROM parsing')  # Получаем все данные из базы данных
+    cursor.execute('SELECT service_number, full_name, phone, address, series_number, issue_date, issued_by, code FROM parsing')  # Получаем все данные из базы данных
     db_data = cursor.fetchall()  # Получаем все записи из базы данных
     # Сравниваем значения в колонке D с базой данных и записываем результаты в колонки G, H и I
     for row in result_sheet.iter_rows(min_row=6, max_row=1077):
         value_D = str(row[5].value)  # Значение в колонке D
-        print(value_D)
+        logger.info(value_D)
         db_number_list = [db_row for db_row in db_data if db_row[0] == value_D]
-        print(db_number_list)
+        logger.info(db_number_list)
         if db_number_list:
             full_name = db_number_list[0][1]
-            print("Found full name:", full_name)
+            logger.info("Found full name:", full_name)
             row[17].value = full_name
             phone = db_number_list[0][2]
             row[18].value = phone
-            print(phone)
+            logger.info(phone)
             address = db_number_list[0][3]
             row[19].value = address
             series_number = db_number_list[0][4]
@@ -106,21 +96,7 @@ def comparing_property():
     result_workbook.close()
 
 
-def open_list_gup_docx():
-    """Открываем документ с шаблоном"""
-    wb = op.load_workbook('list_gup/Списочный_состав.xlsx')  # открываем файл
-    sheet = wb.active  # открываем активную таблицу
-    current_row = 6  # Начальная строка   1077
-    for row in sheet.iter_rows(min_row=6, max_row=1077, values_only=True):
-        number = str(row[30])  # Считываем значение в колонке
-        print(number)
-        sheet.cell(row=current_row, column=35, value=gigachat(number))  # Записываем значение в ячейку
-        current_row += 1  # Переходим к следующей строке
-    wb.save("list_gup/Списочный_состав.xlsx")
-
-
 def open_list_gup():
-    # file = 'list_gup/Список.xlsx'
     file = 'list_gup/Списочный_состав.xlsx'
     wb = op.load_workbook(file)  # открываем файл
     ws = wb.active  # открываем активную таблицу
@@ -182,7 +158,6 @@ def record_data_salary(row, formatted_date, ending, file_dog):
 
 
 def creation_contracts(row, formatted_date, ending):
-
     if row[11] > 1000:
         if row[21] == 7:  # 7 часов
             file_dog = "template/Шаблон_трудовой_договор_7_часов.docx"
@@ -224,15 +199,15 @@ def format_date(date):
 
 
 if __name__ == '__main__':
-    open_list_gup_docx()
-    # parsed_data = open_list_gup()
-    # for row in parsed_data:
-    #     print(row[32])
-    #     if row[14] == "Мужчина":
-    #         ending = "ый"
-    #         formatted_date = format_date(row[8])
-    #         creation_contracts(row, formatted_date, ending)
-    #     elif row[14] == "Женщина":
-    #         ending = "ая"
-    #         formatted_date = format_date(row[8])
-    #         creation_contracts(row, formatted_date, ending)
+    # TODO: Вынести в отдельную функцию
+    parsed_data = open_list_gup()
+    for row in parsed_data:
+        print(row[32])
+        if row[14] == "Мужчина":
+            ending = "ый"
+            formatted_date = format_date(row[8])
+            creation_contracts(row, formatted_date, ending)
+        elif row[14] == "Женщина":
+            ending = "ая"
+            formatted_date = format_date(row[8])
+            creation_contracts(row, formatted_date, ending)
