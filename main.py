@@ -5,7 +5,7 @@ import openpyxl as op
 from docxtpl import DocxTemplate
 from loguru import logger
 
-from parsing_comparison_file import compare_and_rewrite_professions
+from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
 logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
@@ -113,13 +113,12 @@ def format_date(date):
 
 
 if __name__ == '__main__':
-
-    print("Парсинг документа Exell\n1 - Парсинг документа Exell\n2 - Заполнение договоров\n\nВыберите значение:")
+    # TODO: Вынести в отдельную функцию
+    print("Парсинг документа Exell\n1 - Парсинг документа Exell\n2 - Заполнение договоров\n3 - Сравнивание и заполнение данных в Exell\n\nВыберите значение:")
     user_input = int(input())
-    if user_input == 1:  # TODO: Вынести в отдельную функцию
-        compare_and_rewrite_professions()
+    if user_input == 1:
+        parsing_document_1(min_row=6, max_row=1084, column=5, column_1=8)
     elif user_input == 2:
-        # TODO: Вынести в отдельную функцию
         parsed_data = open_list_gup()
         for row in parsed_data:
             logger.info(row[32])
@@ -131,3 +130,5 @@ if __name__ == '__main__':
                 ending = "ая"
                 formatted_date = format_date(row[8])
                 creation_contracts(row, formatted_date, ending)
+    elif user_input == 3:
+        compare_and_rewrite_professions()

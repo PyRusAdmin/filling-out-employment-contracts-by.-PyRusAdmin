@@ -3,7 +3,7 @@ import os
 import sqlite3
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
+from loguru import logger
 from openpyxl import load_workbook
 
 table_name = "parsing"  # Имя таблицы в базе данных
@@ -37,13 +37,13 @@ def compare_and_rewrite_professions():
     cursor.execute(f'SELECT * FROM {table_name}')
     db_data = cursor.fetchall()
     # Сравниваем значения колонки табельного номера с базой данных и перезаписываем значение профессии в колонку C
-    for row in sheet.iter_rows(min_row=5, max_row=981):
-        value_D = str(row[1].value)  # Значение в колонке с которой сравниваются данные
-        print(value_D)
+    for row in sheet.iter_rows(min_row=5, max_row=1077):
+        value_D = str(row[5].value)  # Значение в колонке с которой сравниваются данные
+        logger.info(value_D)
         matching_rows = [db_row for db_row in db_data if db_row[0] == value_D]
         if matching_rows:
             profession = matching_rows[0][1]
-            row[4].value = profession  # Записываем данные если найдены сходства
+            row[9].value = profession  # Записываем данные если найдены сходства
 
     workbook.save(filename)  # Сохраняем изменения в файле Excel
     workbook.close()
@@ -63,8 +63,10 @@ def parsing_document_1(min_row, max_row, column, column_1) -> None:
     filename = opening_a_files()  # Открываем выбор файла Excel для чтения данных
     workbook = load_workbook(filename=filename)  # Загружаем выбранный файл Excel
     sheet = workbook.active
-
-    os.remove(file_database)  # Удаляем файл базы данных
+    try:
+        os.remove(file_database)  # Удаляем файл базы данных
+    except FileNotFoundError:
+        logger.info("Файл базы данных не найден")
 
     conn = sqlite3.connect(file_database)  # Создаем соединение с базой данных
     cursor = conn.cursor()
