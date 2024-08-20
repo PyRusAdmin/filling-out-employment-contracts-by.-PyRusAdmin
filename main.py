@@ -16,8 +16,8 @@ token = config['token']['token']
 def gigachat(employee_name):
     # Используйте токен, полученный в личном кабинете из поля Авторизационные данные
     with GigaChat(credentials=token, verify_ssl_certs=False) as giga:
-        response = giga.chat(f"Определи по Имени Фамилии и Отчеству это мужчина или женщина? "
-                             f"Ответ дай короткий или мужчина или женщина: {employee_name}")
+        response = giga.chat(f"Напиши в родительном падеже: {employee_name}")
+        print(response.choices[0].message.content)
         return response.choices[0].message.content
 
 
@@ -44,8 +44,7 @@ def po_parsing_jul_2023():
     workbook = load_workbook(filename=filename)  # Загружаем выбранный файл Excel
     sheet = workbook.active
     # Создаем таблицу в базе данных, если она еще не существует
-    cursor.execute(
-        '''CREATE TABLE IF NOT EXISTS parsing (service_number, full_name, phone, address, series_number, issue_date, issued_by, code)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS parsing (service_number, full_name, phone, address, series_number, issue_date, issued_by, code)''')
     # Считываем данные из колонок A и H и вставляем их в базу данных
     for row in sheet.iter_rows(min_row=5, max_row=1076, values_only=True):
         service_number = str(row[0])  # Преобразуем значение в строку
@@ -109,14 +108,15 @@ def comparing_property():
 
 def open_list_gup_docx():
     """Открываем документ с шаблоном"""
-    wb = op.load_workbook('list_gup/Списочный_состав_1.xlsx')  # открываем файл
+    wb = op.load_workbook('list_gup/Списочный_состав.xlsx')  # открываем файл
     sheet = wb.active  # открываем активную таблицу
-    current_row = 15  # Начальная строка
+    current_row = 6  # Начальная строка   1077
     for row in sheet.iter_rows(min_row=6, max_row=1077, values_only=True):
-        number = str(row[6])  # Считываем значение в колонке
-        sheet.cell(row=current_row, column=27, value=gigachat(number))  # Записываем значение в ячейку
+        number = str(row[30])  # Считываем значение в колонке
+        print(number)
+        sheet.cell(row=current_row, column=35, value=gigachat(number))  # Записываем значение в ячейку
         current_row += 1  # Переходим к следующей строке
-    wb.save("list_gup/Списочный_состав_1.xlsx")
+    wb.save("list_gup/Списочный_состав.xlsx")
 
 
 def open_list_gup():
@@ -125,7 +125,7 @@ def open_list_gup():
     wb = op.load_workbook(file)  # открываем файл
     ws = wb.active  # открываем активную таблицу
     list_gup = []  # создаем список
-    for row in ws.iter_rows(min_row=6, max_row=1077, min_col=0, max_col=23):  # перебираем строки
+    for row in ws.iter_rows(min_row=6, max_row=1077, min_col=0, max_col=36):  # перебираем строки
         row_data = [cell.value for cell in row]  # создаем список
         list_gup.append(row_data)  # добавляем в список
     return list_gup  # возвращаем список
@@ -184,10 +184,10 @@ def record_data_salary(row, formatted_date, ending, file_dog):
 def creation_contracts(row, formatted_date, ending):
 
     if row[11] > 1000:
-        if row[21] == 7:
+        if row[21] == 7:  # 7 часов
             file_dog = "template/Шаблон_трудовой_договор_7_часов.docx"
             record_data_salary(row, formatted_date, ending, file_dog)
-        elif row[21] == 8:
+        elif row[21] == 8:  # 8 часов
             if row[2] == 'Рук.пр.гр.подз':
                 file_dog = "template/Шаблон_трудовой_договор_8_часов_ИТР.docx"
                 record_data_salary(row, formatted_date, ending, file_dog)
@@ -197,11 +197,15 @@ def creation_contracts(row, formatted_date, ending):
             else:
                 file_dog = "template/Шаблон_трудовой_договор.docx"
                 record_data_salary(row, formatted_date, ending, file_dog)
+        elif row[21] == 12:  # 12 часов
+            print(12)
+            file_dog = "template/Шаблон_трудовой_договор_12_часов.docx"
+            record_data_salary(row, formatted_date, ending, file_dog)
         else:
             file_dog = "template/Шаблон_трудовой_договор.docx"
             record_data_salary(row, formatted_date, ending, file_dog)
     elif row[11] < 1000:
-        if row[21] == 6:
+        if row[21] == 6:  # 6 часов
             file_dog = "template/Шаблон_трудовой_договор_6_часов.docx"
             filling_data_hourly_rate(row, formatted_date, ending, file_dog)
         else:
@@ -220,14 +224,15 @@ def format_date(date):
 
 
 if __name__ == '__main__':
-    parsed_data = open_list_gup()
-    for row in parsed_data:
-        print(row)
-        if row[14] == "Мужчина":
-            ending = "ый"
-            formatted_date = format_date(row[8])
-            creation_contracts(row, formatted_date, ending)
-        elif row[14] == "Женщина":
-            ending = "ая"
-            formatted_date = format_date(row[8])
-            creation_contracts(row, formatted_date, ending)
+    open_list_gup_docx()
+    # parsed_data = open_list_gup()
+    # for row in parsed_data:
+    #     print(row[32])
+    #     if row[14] == "Мужчина":
+    #         ending = "ый"
+    #         formatted_date = format_date(row[8])
+    #         creation_contracts(row, formatted_date, ending)
+    #     elif row[14] == "Женщина":
+    #         ending = "ая"
+    #         formatted_date = format_date(row[8])
+    #         creation_contracts(row, formatted_date, ending)
