@@ -3,13 +3,15 @@ from datetime import datetime
 import sqlite3
 import openpyxl as op
 from docxtpl import DocxTemplate
-
+import os
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from openpyxl import load_workbook
 from loguru import logger
 
 logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
+table_name = "parsing"  # Имя таблицы в базе данных
+file_database = "data.db"  # Имя файла базы данных
 
 
 def opening_a_file():
@@ -27,73 +29,43 @@ def opening_the_database():
     return conn, cursor
 
 
-def po_parsing_jul_2023():
-    """Изменение от 19.01.2024 Парсинг май 2023"""
+def parsing_document_1(min_row, max_row, column, column_1) -> None:
+    """
+    Осуществляет парсинг данных из файла Excel и вставляет их в базу данных SQLite.
 
-    conn, cursor = opening_the_database()
+    Аргументы:
+    :param min_row: Строка, с которой начинается считывание данных.
+    :param max_row: Строка, с которой заканчивается считывание данных.
+    :param column: Столбец, с которого начинается считывание данных.
+    :param column_1: Столбец, с которого начинается считывание данных.
+    """
     filename = opening_a_file()  # Открываем выбор файла Excel для чтения данных
     workbook = load_workbook(filename=filename)  # Загружаем выбранный файл Excel
     sheet = workbook.active
+
+    os.remove(file_database)  # Удаляем файл базы данных
+
+    conn = sqlite3.connect(file_database)  # Создаем соединение с базой данных
+    cursor = conn.cursor()
     # Создаем таблицу в базе данных, если она еще не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS parsing (service_number, full_name, phone, address, series_number, issue_date, issued_by, code)''')
-    # Считываем данные из колонок A и H и вставляем их в базу данных
-    for row in sheet.iter_rows(min_row=5, max_row=1076, values_only=True):
-        service_number = str(row[0])  # Преобразуем значение в строку
-        full_name = str(row[1])
-        phone = str(row[2])
-        address = str(row[3])
-        series_number = str(row[4])
-        issue_date = str(row[5])
-        issued_by = str(row[6])
-        code = str(row[7])
-        logger.info(service_number, full_name, phone, address, series_number, issue_date, issued_by, code)
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (table_column_1, table_column_2)")
+    # Считываем данные из колонки A и вставляем их в базу данных
+    for row in sheet.iter_rows(min_row=int(min_row), max_row=int(max_row), values_only=True):
+        table_column_1 = str(row[int(column)])  # Преобразуем значение в строку
+        table_column_2 = str(row[int(column_1)])  # Преобразуем значение в строку
         # Проверяем, существует ли запись с таким табельным номером в базе данных
-        cursor.execute('SELECT * FROM parsing WHERE service_number = ?', (service_number,))
+        cursor.execute(f"SELECT * FROM {table_name} WHERE table_column_1 = ? AND table_column_2 = ?",
+                       (table_column_1, table_column_2))
         existing_row = cursor.fetchone()
         # Если запись с таким табельным номером не существует, вставляем данные в базу данных
         if existing_row is None:
-            cursor.execute('INSERT INTO parsing VALUES (?, ?, ?,?, ?,?,?,?)',
-                           (service_number, full_name, phone, address, series_number, issue_date, issued_by, code,))
-        # Сохраняем изменения в базе данных и закрываем соединение
+            cursor.execute(f"INSERT INTO {table_name} VALUES (?, ?)", (table_column_1, table_column_2))
+    # Удаляем повторы по табельному номеру
+    cursor.execute(
+        f"DELETE FROM {table_name} WHERE rowid NOT IN (SELECT min(rowid) FROM {table_name} GROUP BY table_column_1, table_column_2)")
+    # Сохраняем изменения в базе данных и закрываем соединение
     conn.commit()
     conn.close()
-
-
-def comparing_property():
-    """Сравниваем данные с базы данных с файлом"""
-    conn, cursor = opening_the_database()
-    # Загружаем файл Excel для записи результатов
-    result_workbook = load_workbook(filename='list_gup/Списочный_состав.xlsx')
-    result_sheet = result_workbook.active
-    cursor.execute('SELECT service_number, full_name, phone, address, series_number, issue_date, issued_by, code FROM parsing')  # Получаем все данные из базы данных
-    db_data = cursor.fetchall()  # Получаем все записи из базы данных
-    # Сравниваем значения в колонке D с базой данных и записываем результаты в колонки G, H и I
-    for row in result_sheet.iter_rows(min_row=6, max_row=1077):
-        value_D = str(row[5].value)  # Значение в колонке D
-        logger.info(value_D)
-        db_number_list = [db_row for db_row in db_data if db_row[0] == value_D]
-        logger.info(db_number_list)
-        if db_number_list:
-            full_name = db_number_list[0][1]
-            logger.info("Found full name:", full_name)
-            row[17].value = full_name
-            phone = db_number_list[0][2]
-            row[18].value = phone
-            logger.info(phone)
-            address = db_number_list[0][3]
-            row[19].value = address
-            series_number = db_number_list[0][4]
-            row[20].value = series_number  # Год из базы данных в колонку 20
-            issue_date = db_number_list[0][5]
-            row[21].value = issue_date
-            issued_by = db_number_list[0][6]
-            row[22].value = issued_by
-            code = db_number_list[0][7]
-            row[23].value = code  # Год из базы данных в колонку 20
-
-    # Сохраняем изменения в файле Excel для записи результатов
-    result_workbook.save(filename='list_gup/Списочный_состав.xlsx')
-    result_workbook.close()
 
 
 def open_list_gup():
