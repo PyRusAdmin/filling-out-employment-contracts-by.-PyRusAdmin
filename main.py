@@ -48,6 +48,10 @@ def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
 
 def record_data_salary(row, formatted_date, ending, file_dog):
     doc = DocxTemplate(file_dog)
+
+    date = row[34]
+    day, month, year = date.split('.') # разделение даты
+    logger.info(f"{day} {month} {year}") # форматирование даты
     context = {
         'name_surname': f" {row[6]} ",  # Ф.И.О. (Иванов Иван Иванович)
         'name_surname_completely': f" {row[7]} ",  # Ф.И.О. (Иванов И. И.)
@@ -67,7 +71,11 @@ def record_data_salary(row, formatted_date, ending, file_dog):
         'month_or_hour': 'в месяц',
         'district_pro': f" {row[22]} ",  # Участок
         'employment_contract_number': f' {row[28]}', # Номер трудового договора
+        'day': f' {day}', # День
+        'month': f' {month}', # Месяц
+        'year': f' {year}', # Год
     }
+
     doc.render(context)
     doc.save(f"готовые договора/{row[0]}_{row[5]}_{row[6]}.docx")
 
