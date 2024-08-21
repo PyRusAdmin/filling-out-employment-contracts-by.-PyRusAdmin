@@ -66,6 +66,7 @@ def record_data_salary(row, formatted_date, ending, file_dog):
         'official_salary_termination': 'должностного оклада',
         'month_or_hour': 'в месяц',
         'district_pro': f" {row[22]} ",  # Участок
+        'employment_contract_number': f' {row[28]}', # Номер трудового договора
     }
     doc.render(context)
     doc.save(f"готовые договора/{row[0]}_{row[5]}_{row[6]}.docx")
