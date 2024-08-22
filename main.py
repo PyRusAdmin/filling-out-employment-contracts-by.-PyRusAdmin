@@ -7,8 +7,6 @@ from loguru import logger
 
 from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
-# import datetime
-
 logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 
@@ -51,13 +49,8 @@ def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
 def record_data_salary(row, formatted_date, ending, file_dog):
     logger.info(f"Табельный номер: {row[5]}, Ф.И.О.: {row[6]}")  # форматирование даты
     doc = DocxTemplate(file_dog)
-    logger.info(row[34])  # форматирование даты
-
     date = row[34]
-
     day, month, year = date.split('.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
-    logger.info(f"{day} {month} {year}")  # форматирование даты
-
     context = {
         'name_surname': f" {row[6]} ",  # Ф.И.О. (Иванов Иван Иванович)
         'name_surname_completely': f" {row[7]} ",  # Ф.И.О. (Иванов И. И.)
@@ -89,84 +82,61 @@ def record_data_salary(row, formatted_date, ending, file_dog):
 def creation_contracts(row, formatted_date, ending):
     if row[11] > 1000:
         if row[21] == 7:  # 7 часов
-            file_dog = "template/Шаблон_трудовой_договор_7_часов.docx"
-            record_data_salary(row, formatted_date, ending, file_dog)
+            record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_7_часов.docx")
         elif row[21] == 8:  # 8 часов
             if row[2] == 'Рук.пр.гр.подз':
-                file_dog = "template/Шаблон_трудовой_договор_8_часов_ИТР.docx"
-                record_data_salary(row, formatted_date, ending, file_dog)
+                record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР.docx")
             elif row[2] == 'Спец.пром.подз':
-                file_dog = "template/Шаблон_трудовой_договор_8_часов_ИТР.docx"
-                record_data_salary(row, formatted_date, ending, file_dog)
-
+                record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР.docx")
             elif row[2] == 'Всп.раб.поверх':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
             elif row[2] == 'Спец.пром.пов.':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
             elif row[2] == 'Рук.пр.гр.пов.':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
             elif row[2] == 'Рабоч.непр.гр.':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
             elif row[2] == 'Руковод.непром':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
             elif row[2] == 'Служащие пром.':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
-
             else:
-                file_dog = "template/Шаблон_трудовой_договор.docx"
-                record_data_salary(row, formatted_date, ending, file_dog)
-
-
+                record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
         elif row[21] == 12:  # 12 часов
-            print(12)
-            file_dog = "template/Шаблон_трудовой_договор_12_часов.docx"
-            record_data_salary(row, formatted_date, ending, file_dog)
+            record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор_12_часов.docx")
 
         elif row[21] == 24:  # 24 часов
-            print(24)
             if row[2] == 'Всп.раб.поверх':
                 if row[13] == 4:
-                    logger.info("Нет вредности")
                     record_data_salary(row, formatted_date, ending,
                                        "template/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
                 else:
                     record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
-
-
         else:
-            file_dog = "template/Шаблон_трудовой_договор.docx"
-            record_data_salary(row, formatted_date, ending, file_dog)
+            record_data_salary(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
     elif row[11] < 1000:
         if row[21] == 6:  # 6 часов
-            file_dog = "template/Шаблон_трудовой_договор_6_часов.docx"
-            filling_data_hourly_rate(row, formatted_date, ending, file_dog)
+            filling_data_hourly_rate(row, formatted_date, ending, "template/Шаблон_трудовой_договор_6_часов.docx")
         else:
-            file_dog = "template/Шаблон_трудовой_договор.docx"
-            filling_data_hourly_rate(row, formatted_date, ending, file_dog)
+            filling_data_hourly_rate(row, formatted_date, ending, "template/Шаблон_трудовой_договор.docx")
 
 
 def format_date(date):
@@ -181,8 +151,7 @@ def format_date(date):
 
 if __name__ == '__main__':
     # TODO: Вынести в отдельную функцию
-    print(
-        "Парсинг документа Exell\n1 - Парсинг документа Exell\n2 - Заполнение договоров\n3 - Сравнивание и заполнение данных в Exell\n\nВыберите значение:")
+    print("Парсинг документа Exell\n1 - Парсинг документа Exell\n2 - Заполнение договоров\n3 - Сравнивание и заполнение данных в Exell\n\nВыберите значение:")
     user_input = int(input())
     if user_input == 1:
         parsing_document_1(min_row=6, max_row=1084, column=5, column_1=8)
@@ -193,15 +162,12 @@ if __name__ == '__main__':
 
         parsed_data = open_list_gup()
         for row in parsed_data:
-            logger.info(row[32])
             if row[14] == "Мужчина":
                 ending = "ый"
-                formatted_date = format_date(row[8])
-                creation_contracts(row, formatted_date, ending)
+                creation_contracts(row, format_date(row[8]), ending)
             elif row[14] == "Женщина":
                 ending = "ая"
-                formatted_date = format_date(row[8])
-                creation_contracts(row, formatted_date, ending)
+                creation_contracts(row, format_date(row[8]), ending)
 
         finish = datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
