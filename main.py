@@ -7,7 +7,7 @@ from loguru import logger
 
 from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
-import datetime
+# import datetime
 
 logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         parsing_document_1(min_row=6, max_row=1084, column=5, column_1=8)
     elif user_input == 2:
 
-        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+        start = datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
 
         parsed_data = open_list_gup()
@@ -203,7 +203,7 @@ if __name__ == '__main__':
                 formatted_date = format_date(row[8])
                 creation_contracts(row, formatted_date, ending)
 
-        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+        finish = datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
