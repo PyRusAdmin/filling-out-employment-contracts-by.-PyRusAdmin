@@ -145,6 +145,7 @@ def format_date(date):
         5: "мая", 6: "июня", 7: "июля", 8: "августа",
         9: "сентября", 10: "октября", 11: "ноября", 12: "декабря"
     }
+    logger.info(f'Дата: {date}') # Выводим дату в формате "день месяц год"
     date = datetime.strptime(date, "%d.%m.%Y")
     return '" {:02d} " {} {} г.'.format(date.day, months[date.month], date.year)
 
@@ -164,6 +165,7 @@ if __name__ == '__main__':
         for row in parsed_data:
             if row[14] == "Мужчина":
                 ending = "ый"
+                logger.info(row[8]) # выводим данные в консоль
                 creation_contracts(row, format_date(row[8]), ending)
             elif row[14] == "Женщина":
                 ending = "ая"
