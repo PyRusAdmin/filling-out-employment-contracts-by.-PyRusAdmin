@@ -23,6 +23,9 @@ def open_list_gup():
 
 def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
     doc = DocxTemplate(file_dog)
+    date = row[34]
+    day, month, year = date.split(
+        '.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
     context = {
         'name_surname': f" {row[6]} ",  # Ф.И.О. (Иванов Иван Иванович)
         'name_surname_completely': f" {row[7]} ",  # Ф.И.О. (Иванов И. И.)
@@ -41,6 +44,11 @@ def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
         'official_salary_termination': 'часовой тарифной ставки',
         'month_or_hour': 'в час',
         'district_pro': f" {row[22]} ",  # Участок
+        'employment_contract_number': f' {row[28]}',  # Номер трудового договора
+        'day': f'{day}',  # День
+        'month': f'{month}',  # Месяц
+        'year': f'{year}',  # Год
+        'graduation_from_profession': f' {row[32]} ',  # Профессия в родительном падеже
     }
     doc.render(context)
     doc.save(f"готовые договора/{row[0]}_{row[5]}_{row[6]}.docx")
@@ -73,6 +81,7 @@ def record_data_salary(row, formatted_date, ending, file_dog):
         'day': f'{day}',  # День
         'month': f'{month}',  # Месяц
         'year': f'{year}',  # Год
+        'graduation_from_profession': f' {row[32]} ',  # Профессия в родительном падеже
     }
 
     doc.render(context)
