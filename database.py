@@ -41,5 +41,21 @@ def import_excel_to_db():
     logger.info("Данные из Excel импортированы в базу данных.")
 
 
+def read_from_db():
+    """Считываем данные из базы данных"""
+
+    # Подключаемся к базе данных SQLite
+    conn = sqlite3.connect('contracts.db')
+    cursor = conn.cursor()
+    # Выполняем SQL-запрос для чтения всех данных из таблицы employees
+    cursor.execute('SELECT * FROM employees')
+    # Получаем все строки результата запроса
+    rows = cursor.fetchall()
+    # Закрываем соединение с базой данных
+    conn.close()
+    # Возвращаем данные
+    return rows
+
+
 if __name__ == '__main__':
     import_excel_to_db()
