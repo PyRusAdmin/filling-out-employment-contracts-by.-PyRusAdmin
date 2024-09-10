@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 
-from database import import_excel_to_db, read_from_db
-from main import open_list_gup, creation_contracts, format_date
-from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
+from flask import Flask, render_template, request, redirect, url_for
 from loguru import logger
 
+from database import import_excel_to_db, read_from_db
+from filling_data import creation_contracts, format_date
+from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
 app = Flask(__name__)
 
@@ -41,7 +41,6 @@ def action():
         compare_and_rewrite_professions()
 
     elif user_input == 4:
-
         import_excel_to_db() # импортируем данные из excel в базу данных
 
     return redirect(url_for('index'))
