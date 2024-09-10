@@ -1,4 +1,6 @@
+import time
 from datetime import datetime
+from threading import Thread
 
 from flask import Flask, render_template, request, redirect, url_for
 from loguru import logger
@@ -9,9 +11,32 @@ from parsing_comparison_file import parsing_document_1, compare_and_rewrite_prof
 
 app = Flask(__name__)
 
+
+progress_messages = []  # список сообщений, которые будут отображаться в progress
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/loading')
+def loading():
+    """Сообщение, что база данных формируется"""
+    return render_template('loading.html')
+
+def run_import():
+    # Импорт данных из Excel в базе данных в фоне
+    import_excel_to_db()
+
+
+@app.route('/progress')
+def progress():
+    def generate():
+        while True:
+            if progress_messages:
+                message = progress_messages.pop(0)
+                yield f"data: {message}\n\n"
+            time.sleep(1)
+
 
 @app.route('/action', methods=['POST'])
 def action():
@@ -40,8 +65,13 @@ def action():
     elif user_input == 3:
         compare_and_rewrite_professions()
 
+
     elif user_input == 4:
-        import_excel_to_db() # импортируем данные из excel в базу данных
+
+        # Запускаем фоновый поток для импорта данных и сразу отображаем страницу загрузки
+        thread = Thread(target=run_import)
+        thread.start()
+        return redirect(url_for('loading'))
 
     return redirect(url_for('index'))
 
