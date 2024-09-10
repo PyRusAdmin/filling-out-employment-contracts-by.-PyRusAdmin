@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 
+from database import import_excel_to_db
 from main import open_list_gup, creation_contracts, format_date
 from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 from loguru import logger
 
-logger.add("log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 app = Flask(__name__)
 
@@ -20,6 +20,7 @@ def action():
     if user_input == 1:
         parsing_document_1(min_row=6, max_row=1084, column=5, column_1=8)
     elif user_input == 2:
+
         start = datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
 
@@ -39,6 +40,10 @@ def action():
 
     elif user_input == 3:
         compare_and_rewrite_professions()
+
+    elif user_input == 4:
+
+        import_excel_to_db() # импортируем данные из excel в базу данных
 
     return redirect(url_for('index'))
 
