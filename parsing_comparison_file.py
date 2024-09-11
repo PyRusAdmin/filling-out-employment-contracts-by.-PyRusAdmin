@@ -10,14 +10,14 @@ table_name = "parsing"  # Имя таблицы в базе данных
 file_database = "data.db"  # Имя файла базы данных
 
 
-def opening_the_database():
+async def opening_the_database():
     """Открытие базы данных"""
     conn = sqlite3.connect('data.db')  # Создаем соединение с базой данных
     cursor = conn.cursor()
     return conn, cursor
 
 
-def opening_a_files():
+async def opening_a_files():
     """Открытие файла Excel выбором файла"""
     root = Tk()
     root.withdraw()
@@ -25,7 +25,7 @@ def opening_a_files():
     return filename
 
 
-def compare_and_rewrite_professions():
+async def compare_and_rewrite_professions():
     """Изменение от 24.01.2024 Сравнение и перезапись значений профессии в файле Excel счет начинается с 0"""
     conn, cursor = opening_the_database()
     # Открываем выбор файла Excel для чтения данных
@@ -50,7 +50,7 @@ def compare_and_rewrite_professions():
     conn.close()  # Закрываем соединение с базой данных
 
 
-def parsing_document_1(min_row, max_row, column, column_1) -> None:
+async def parsing_document_1(min_row, max_row, column, column_1) -> None:
     """
     Осуществляет парсинг данных из файла Excel и вставляет их в базу данных SQLite.
 

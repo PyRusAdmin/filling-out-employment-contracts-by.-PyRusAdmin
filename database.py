@@ -4,7 +4,7 @@ import sqlite3
 import openpyxl as op
 from loguru import logger
 
-def import_excel_to_db():
+async def import_excel_to_db():
     file = 'list_gup/Списочный_состав.xlsx'
     wb = op.load_workbook(file)
     ws = wb.active
@@ -37,7 +37,7 @@ def import_excel_to_db():
     logger.info("Данные из Excel импортированы в базу данных.")
 
 
-def read_from_db():
+async def read_from_db():
     """Считываем данные из базы данных"""
 
     # Подключаемся к базе данных SQLite

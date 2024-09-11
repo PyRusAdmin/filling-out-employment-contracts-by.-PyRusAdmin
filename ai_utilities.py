@@ -8,7 +8,7 @@ config.read('config.ini')
 token = config['token']['token']
 
 
-def gigachat(employee_name):
+async def gigachat(employee_name):
     # Используйте токен, полученный в личном кабинете из поля Авторизационные данные
     with GigaChat(credentials=token, verify_ssl_certs=False) as giga:
         response = giga.chat(f"Напиши в родительном падеже: {employee_name}")
@@ -16,7 +16,7 @@ def gigachat(employee_name):
         return response.choices[0].message.content
 
 
-def open_list_gup_docx():
+async def open_list_gup_docx():
     """Открываем документ с шаблоном"""
     wb = op.load_workbook('list_gup/Списочный_состав.xlsx')  # открываем файл
     sheet = wb.active  # открываем активную таблицу

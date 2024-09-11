@@ -4,3 +4,4 @@ configparser~=7.0.0
 gigachat~=0.1.35
 loguru~=0.7.2
 flask
+Quart~=0.19.6
