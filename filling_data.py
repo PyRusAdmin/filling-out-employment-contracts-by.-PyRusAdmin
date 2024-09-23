@@ -32,7 +32,8 @@ async def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
 
     doc = DocxTemplate(file_dog)
     date = row[30]
-    day, month, year = date.split('.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
+    day, month, year = date.split(
+        '.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
     context = {
         'name_surname': f" {row[5]} ",  # Ф.И.О. (Иванов Иван Иванович)
         'name_surname_completely': f" {row[6]} ",  # Ф.И.О. (Иванов И. И.)
@@ -65,8 +66,9 @@ async def record_data_salary(row, formatted_date, ending, file_dog):
     """Должностной оклад"""
 
     doc = DocxTemplate(file_dog)
-    date = row[30] # дата трудового договора
-    day, month, year = date.split('.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
+    date = row[30]  # дата трудового договора
+    day, month, year = date.split(
+        '.')  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
     context = {
         'name_surname': f" {row[5]} ",  # Ф.И.О. (Иванов Иван Иванович)
         'name_surname_completely': f" {row[6]} ",  # Ф.И.О. (Иванов И. И.)
@@ -103,48 +105,65 @@ async def creation_contracts(row, formatted_date, ending):
 
         else:
 
-            if row[9] > 1000: # Оклад
+            if row[9] > 1000:  # Оклад
                 if row[34] == 'None':
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_уборщ_8_часов':  # 12 часов
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_уборщ_8_часов.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_уборщ_8_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_8_часов_ИТР_подземные':  # 12 часов
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_12_часов':  # 12 часов
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_12_часов.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_12_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_6_часов':  # 6 часов
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_6_часов.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_6_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_7_часов':
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_7_часов.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_7_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7':
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_водителя_8_часов':
-                    await record_data_salary(row, formatted_date, ending,"Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_водителя_8_часов.docx")
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_водителя_8_часов.docx")
+                elif row[34] == 'Шаблон_трудовой_договор_8_часов_ИТР_без_вредности':
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
 
-            elif row[9] < 1000: # Часовая тарифная ставка
+            elif row[9] < 1000:  # Часовая тарифная ставка
                 if row[34] == 'None':
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_уборщ_8_часов':  # 12 часов
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_уборщ_8_часов.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_уборщ_8_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_8_часов_ИТР_подземные':  # 12 часов
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_12_часов':  # 12 часов
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_12_часов.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_12_часов.docx")
 
                 elif row[34] == 'ТД_6_час.раб.':  # 6 часов
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/ТД_6_час.раб..docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/ТД_6_час.раб..docx")
 
                 elif row[34] == 'Шаблон_трудовой_договор_7_часов':
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_7_часов.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_7_часов.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7':
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx")
                 elif row[34] == 'Шаблон_трудовой_договор_водителя_8_часов':
-                    await filling_data_hourly_rate(row, formatted_date, ending,"Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_водителя_8_часов.docx")
+                    await filling_data_hourly_rate(row, formatted_date, ending,
+                                                   "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_водителя_8_часов.docx")
 
     except Exception as e:
         logger.exception(e)
-
-
 
 
 if __name__ == '__main__':
