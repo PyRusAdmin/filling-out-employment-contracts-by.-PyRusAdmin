@@ -12,18 +12,22 @@ app = Quart(__name__)
 
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
+
 @app.route('/')
 async def index():
     return await render_template('index.html')
+
 
 @app.route('/loading')
 async def loading():
     """Сообщение, что база данных формируется"""
     return await render_template('loading.html')
 
+
 async def run_import():
     # Импорт данных из Excel в базе данных в фоне
     await import_excel_to_db()
+
 
 @app.route('/progress')
 async def progress():
@@ -35,6 +39,7 @@ async def progress():
             await asyncio.sleep(1)
 
     return generate()
+
 
 @app.route('/action', methods=['POST'])
 async def action():
@@ -49,13 +54,17 @@ async def action():
         # Выводим считанные данные на экран
         for row in data:
             logger.info(row)
-            if row[14] == "Мужчина":
+            if row[11] == "Мужчина":  # гендерное определение
                 ending = "ый"
                 logger.info(row[8])  # выводим данные в консоль
-                await creation_contracts(row, format_date(row[8]), ending)
-            elif row[14] == "Женщина":
+                await creation_contracts(row,
+                                         await format_date(row[7]),  # дата поступления на предприятие
+                                         ending)
+            elif row[11] == "Женщина":  # гендерное определение
                 ending = "ая"
-                await creation_contracts(row, format_date(row[8]), ending)
+                await creation_contracts(row,
+                                         await format_date(row[7]),  # дата поступления на предприятие
+                                         ending)
         finish = datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
@@ -68,8 +77,8 @@ async def action():
         await import_excel_to_db()
         return redirect(url_for('loading'))
 
-
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

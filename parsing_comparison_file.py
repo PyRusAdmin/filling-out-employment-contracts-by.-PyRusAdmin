@@ -29,7 +29,7 @@ async def compare_and_rewrite_professions():
     """Изменение от 24.01.2024 Сравнение и перезапись значений профессии в файле Excel счет начинается с 0"""
     conn, cursor = opening_the_database()
     # Открываем выбор файла Excel для чтения данных
-    filename = opening_a_files()
+    filename = await opening_a_files()
     # Загружаем выбранный файл Excel
     workbook = load_workbook(filename=filename)
     sheet = workbook.active
@@ -60,7 +60,7 @@ async def parsing_document_1(min_row, max_row, column, column_1) -> None:
     :param column: Столбец, с которого начинается считывание данных.
     :param column_1: Столбец, с которого начинается считывание данных.
     """
-    filename = opening_a_files()  # Открываем выбор файла Excel для чтения данных
+    filename = await opening_a_files()  # Открываем выбор файла Excel для чтения данных
     workbook = load_workbook(filename=filename)  # Загружаем выбранный файл Excel
     sheet = workbook.active
     try:
