@@ -134,6 +134,12 @@ async def creation_contracts(row, formatted_date, ending):
                     await record_data_salary(row, formatted_date, ending,
                                              "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx")
 
+
+                elif row[34] == 'Шаблон_трудовой_договор_24_часа_без_вредн':
+                    await record_data_salary(row, formatted_date, ending,
+                                             "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_24_часа_без_вредн.docx")
+
+
             elif row[9] < 1000:  # Часовая тарифная ставка
                 if row[34] == 'None':
                     await filling_data_hourly_rate(row, formatted_date, ending,
