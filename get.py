@@ -1,11 +1,9 @@
 from peewee import *
 
-# Создайте модель для таблицы в базе данных
-db = SqliteDatabase('contracts.db')
+db = SqliteDatabase("contracts.db")  # Создайте модель для таблицы в базе данных
 
 
 class Employee(Model):
-    # id = AutoField()  # Добавляем поле id, которое будет автоматически увеличиваться
     a0 = CharField()
     a1 = CharField()
     a2 = CharField()
@@ -44,34 +42,3 @@ class Employee(Model):
 
     class Meta:
         database = db
-        # primary_key = False  # Отключаем авто-добавление поля id
-
-
-def search_employee_by_tab_number(tab_number):
-    """Ищем данные сотрудника по табельному номеру"""
-    try:
-        # Поиск строки в базе данных по табельному номеру
-        customer = Employee.get(Employee.a4_табельный_номер == tab_number)
-        # Возвращаем строку со всеми данными
-        return customer
-    except Employee.DoesNotExist:
-        # Возвращает None, если запись не найдена
-        return None
-
-
-def main():
-    tab_number = 22148
-    row = search_employee_by_tab_number(tab_number)
-    if row:
-        # Выводим все поля модели
-        print(row.a0, row.a1, row.a2, row.a3, row.a4_табельный_номер, row.a5, row.a6, row.a7, row.a8, row.a9, row.a10,
-              row.a11, row.a12, row.a13, row.a14, row.a15, row.a16, row.a17, row.a18, row.a19, row.a20, row.a21, row.a22,
-              row.a23, row.a24, row.a25_номер_договора, row.a26, row.a27, row.a28, row.a29, row.a30, row.a31, row.a32,
-              row.a33, row.a34)
-    else:
-        print("Данные не найдены")
-
-
-if __name__ == '__main__':
-    main()
-

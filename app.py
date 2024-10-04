@@ -14,15 +14,15 @@ app = Quart(__name__)
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
 
-@app.route('/')
+@app.route("/")
 async def index():
-    return await render_template('index.html')
+    return await render_template("index.html")
 
 
-@app.route('/loading')
+@app.route("/loading")
 async def loading():
     """Сообщение, что база данных формируется"""
-    return await render_template('loading.html')
+    return await render_template("loading.html")
 
 
 async def run_import():
@@ -30,7 +30,7 @@ async def run_import():
     await import_excel_to_db()
 
 
-@app.route('/progress')
+@app.route("/progress")
 async def progress():
     async def generate():
         while True:
@@ -54,34 +54,40 @@ def search_employee_by_tab_number(tab_number):
         return None
 
 
-@app.route('/get_contract', methods=['GET', 'POST'])
+@app.route("/get_contract", methods=["GET", "POST"])
 async def get_contract():
-    if request.method == 'POST':
-        tab_number = (await request.form).get('tab_number')
-        logger.info(f"Введенный табельный номер: {tab_number}")  # Логируем введенный табельный номер
+    if request.method == "POST":
+        tab_number = (await request.form).get("tab_number")
+        logger.info(
+            f"Введенный табельный номер: {tab_number}"
+        )  # Логируем введенный табельный номер
         if tab_number:
             data = search_employee_by_tab_number(tab_number)
 
             if data:
-                return f"Данные для табельного номера {tab_number}: {data.a0, data.a1, data.a2, data.a3, data.a4_табельный_номер, data.a5, data.a6, data.a7, data.a8, data.a9, data.a10,
-                      data.a11, data.a12, data.a13, data.a14, data.a15, data.a16, data.a17, data.a18, data.a19, data.a20, data.a21, data.a22,
-                      data.a23, data.a24, data.a25_номер_договора, data.a26, data.a27, data.a28, data.a29, data.a30, data.a31, data.a32,
-                      data.a33, data.a34}"
+                return f"Данные для табельного номера {tab_number}: {data.a0, data.a1, data.a2, data.a3,
+                data.a4_табельный_номер, data.a5, data.a6, data.a7, data.a8, data.a9, data.a10, data.a11, data.a12,
+                data.a13, data.a14, data.a15, data.a16, data.a17, data.a18, data.a19, data.a20, data.a21, data.a22,
+                data.a23, data.a24, data.a25_номер_договора, data.a26, data.a27, data.a28, data.a29, data.a30,
+                data.a31, data.a32, data.a33, data.a34}"
             else:
                 return f"Данные для табельного номера {tab_number} не найдены."
         return "Табельный номер не указан."
-    return await render_template('get_contract.html')  # Отображаем форму для GET-запроса
+    return await render_template(
+        "get_contract.html"
+    )  # Отображаем форму для GET-запроса
 
 
-@app.route('/action', methods=['POST'])
+@app.route("/action", methods=["POST"])
 async def action():
-    user_input = int((await request.form)['user_input'])
+    user_input = int((await request.form)["user_input"])
 
     if user_input == 1:
-        await parsing_document_1(min_row=6, max_row=1084, column=5, column_1=8)
+        await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
+
     elif user_input == 2:
         start = datetime.now()  # фиксируем и выводим время старта работы кода
-        logger.info('Время старта: ' + str(start))
+        logger.info("Время старта: " + str(start))
         data = await read_from_db()  # Считываем данные из базы данных
         # Выводим считанные данные на экран
         for row in data:
@@ -89,17 +95,23 @@ async def action():
             if row[11] == "Мужчина":  # гендерное определение
                 ending = "ый"
                 logger.info(row[8])  # выводим данные в консоль
-                await creation_contracts(row,
-                                         await format_date(row[7]),  # дата поступления на предприятие
-                                         ending)
+                await creation_contracts(
+                    row,
+                    await format_date(row[7]),  # дата поступления на предприятие
+                    ending,
+                )
             elif row[11] == "Женщина":  # гендерное определение
                 ending = "ая"
-                await creation_contracts(row,
-                                         await format_date(row[7]),  # дата поступления на предприятие
-                                         ending)
+                await creation_contracts(
+                    row,
+                    await format_date(row[7]),  # дата поступления на предприятие
+                    ending,
+                )
         finish = datetime.now()  # фиксируем и выводим время окончания работы кода
-        logger.info('Время окончания: ' + str(finish))
-        logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+        logger.info("Время окончания: " + str(finish))
+        logger.info(
+            "Время работы: " + str(finish - start)
+        )  # вычитаем время старта из времени окончания
 
     elif user_input == 3:
         await compare_and_rewrite_professions()
@@ -107,16 +119,18 @@ async def action():
     elif user_input == 4:
         # Запускаем асинхронный импорт данных и сразу отображаем страницу загрузки
         await import_excel_to_db()
-        return redirect(url_for('loading'))
+        return redirect(url_for("loading"))
 
     elif user_input == 5:  # Получение трудового договора
-        return redirect(url_for('get_contract'))  # Перенаправляем на страницу get_contract
+        return redirect(
+            url_for("get_contract")
+        )  # Перенаправляем на страницу get_contract
 
     elif user_input == 6:  # Выключение приложения
         exit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

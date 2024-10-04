@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from peewee import *
 import openpyxl as op
 from loguru import logger
+from peewee import *
 
 # Настройка базы данных через Peewee
-db = SqliteDatabase('contracts.db')
+db = SqliteDatabase("contracts.db")
 
 
 class Employee(Model):
@@ -50,7 +50,7 @@ class Employee(Model):
 
 # Функция для импорта данных из Excel в базу данных
 async def import_excel_to_db():
-    file = 'list_gup/Списочный_состав.xlsx'
+    file = "list_gup/Списочный_состав.xlsx"
     wb = op.load_workbook(file)
     ws = wb.active
 
@@ -64,14 +64,41 @@ async def import_excel_to_db():
 
         # Создаем запись в базе данных
         Employee.create(
-            a0=row_data[0], a1=row_data[1], a2=row_data[2], a3=row_data[3], a4_табельный_номер=row_data[4],
-            a5=row_data[5], a6=row_data[6], a7=row_data[7], a8=row_data[8], a9=row_data[9],
-            a10=row_data[10], a11=row_data[11], a12=row_data[12], a13=row_data[13], a14=row_data[14],
-            a15=row_data[15], a16=row_data[16], a17=row_data[17], a18=row_data[18], a19=row_data[19],
-            a20=row_data[20], a21=row_data[21], a22=row_data[22], a23=row_data[23], a24=row_data[24],
-            a25_номер_договора=row_data[25], a26=row_data[26], a27=row_data[27], a28=row_data[28],
-            a29=row_data[29], a30=row_data[30], a31=row_data[31], a32=row_data[32], a33=row_data[33],
-            a34=row_data[34]
+            a0=row_data[0],
+            a1=row_data[1],
+            a2=row_data[2],
+            a3=row_data[3],
+            a4_табельный_номер=row_data[4],
+            a5=row_data[5],
+            a6=row_data[6],
+            a7=row_data[7],
+            a8=row_data[8],
+            a9=row_data[9],
+            a10=row_data[10],
+            a11=row_data[11],
+            a12=row_data[12],
+            a13=row_data[13],
+            a14=row_data[14],
+            a15=row_data[15],
+            a16=row_data[16],
+            a17=row_data[17],
+            a18=row_data[18],
+            a19=row_data[19],
+            a20=row_data[20],
+            a21=row_data[21],
+            a22=row_data[22],
+            a23=row_data[23],
+            a24=row_data[24],
+            a25_номер_договора=row_data[25],
+            a26=row_data[26],
+            a27=row_data[27],
+            a28=row_data[28],
+            a29=row_data[29],
+            a30=row_data[30],
+            a31=row_data[31],
+            a32=row_data[32],
+            a33=row_data[33],
+            a34=row_data[34],
         )
 
     db.close()  # Закрываем подключение к базе данных
@@ -87,5 +114,5 @@ async def read_from_db():
     return rows
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import_excel_to_db()
