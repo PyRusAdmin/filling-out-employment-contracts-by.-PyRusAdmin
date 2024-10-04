@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение трудового договора</title>
+</head>
+<body>
+<form action="/get_contract" method="POST">
+    <label for="tab_number">Табельный номер (4 to 8 characters):</label>
+    <input type="text" id="tab_number" name="tab_number" required minlength="4" maxlength="8" size="10" /><br>
+    <button type="submit">Получить договор</button><br><br>
+</form>
+</body>
+</html>
