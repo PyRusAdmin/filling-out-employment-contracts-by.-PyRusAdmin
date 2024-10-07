@@ -19,10 +19,10 @@ async def index():
     return await render_template("index.html")
 
 
-@app.route("/loading")
-async def loading():
-    """Сообщение, что база данных формируется"""
-    return await render_template("loading.html")
+# @app.route("/loading")
+# async def loading():
+#     """Сообщение, что база данных формируется"""
+#     return await render_template("loading.html")
 
 
 async def run_import():
@@ -80,56 +80,59 @@ async def get_contract():
 
 @app.route("/action", methods=["POST"])
 async def action():
-    user_input = int((await request.form)["user_input"])
+    try:
+        user_input = int((await request.form)["user_input"])
 
-    if user_input == 1:
-        await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
+        if user_input == 1:
+            await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
 
-    elif user_input == 2:
-        start = datetime.now()  # фиксируем и выводим время старта работы кода
-        logger.info("Время старта: " + str(start))
-        data = await read_from_db()  # Считываем данные из базы данных
-        # Выводим считанные данные на экран
-        for row in data:
-            logger.info(row)
-            if row[11] == "Мужчина":  # гендерное определение
-                ending = "ый"
-                logger.info(row[8])  # выводим данные в консоль
-                await creation_contracts(
-                    row,
-                    await format_date(row[7]),  # дата поступления на предприятие
-                    ending,
-                )
-            elif row[11] == "Женщина":  # гендерное определение
-                ending = "ая"
-                await creation_contracts(
-                    row,
-                    await format_date(row[7]),  # дата поступления на предприятие
-                    ending,
-                )
-        finish = datetime.now()  # фиксируем и выводим время окончания работы кода
-        logger.info("Время окончания: " + str(finish))
-        logger.info(
-            "Время работы: " + str(finish - start)
-        )  # вычитаем время старта из времени окончания
+        elif user_input == 2:
+            start = datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info("Время старта: " + str(start))
+            data = await read_from_db()  # Считываем данные из базы данных
+            # Выводим считанные данные на экран
+            for row in data:
+                logger.info(row)
+                if row.a11 == "Мужчина":  # гендерное определение
+                    ending = "ый"
+                    # logger.info(row.some_attribute)  # выводим данные в консоль
+                    await creation_contracts(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+                elif row.a11 == "Женщина":  # гендерное определение
+                    ending = "ая"
+                    await creation_contracts(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info("Время окончания: " + str(finish))
+            logger.info(
+                "Время работы: " + str(finish - start)
+            )  # вычитаем время старта из времени окончания
 
-    elif user_input == 3:
-        await compare_and_rewrite_professions()
+        elif user_input == 3:
+            await compare_and_rewrite_professions()
 
-    elif user_input == 4:
-        # Запускаем асинхронный импорт данных и сразу отображаем страницу загрузки
-        await import_excel_to_db()
-        return redirect(url_for("loading"))
+        elif user_input == 4:
+            # Запускаем асинхронный импорт данных и сразу отображаем страницу загрузки
+            await import_excel_to_db()
+            return redirect(url_for("index"))
 
-    elif user_input == 5:  # Получение трудового договора
-        return redirect(
-            url_for("get_contract")
-        )  # Перенаправляем на страницу get_contract
+        elif user_input == 5:  # Получение трудового договора
+            return redirect(
+                url_for("get_contract")
+            )  # Перенаправляем на страницу get_contract
 
-    elif user_input == 6:  # Выключение приложения
-        exit()
+        elif user_input == 6:  # Выключение приложения
+            exit()
 
-    return redirect(url_for("index"))
+        return redirect(url_for("index"))
+    except Exception as e:
+        logger.exception(e)
 
 
 if __name__ == "__main__":

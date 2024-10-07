@@ -15,11 +15,11 @@ class Employee(Model):
     a4_табельный_номер = CharField(null=True)
     a5 = CharField(null=True)
     a6 = CharField(null=True)
-    a7 = CharField(null=True)
+    a7 = CharField(null=True) # Дата поступление на предприятие
     a8 = CharField(null=True)
     a9 = CharField(null=True)
     a10 = CharField(null=True)
-    a11 = CharField(null=True)
+    a11 = CharField(null=True)  # Гендер сотрудника (мужской/женский)
     a12 = CharField(null=True)
     a13 = CharField(null=True)
     a14 = CharField(null=True)
@@ -39,7 +39,7 @@ class Employee(Model):
     a28 = CharField(null=True)
     a29 = CharField(null=True)
     a30 = CharField(null=True)
-    a31 = CharField(null=True)
+    a31 = CharField(null=True) # напечатанный
     a32 = CharField(null=True)
     a33 = CharField(null=True)
     a34 = CharField(null=True)
