@@ -31,7 +31,7 @@ async def open_list_gup():
     ws = wb.active  # открываем активную таблицу
     list_gup = []  # создаем список
     for row in ws.iter_rows(
-            min_row=5, max_row=1100, min_col=0, max_col=34
+        min_row=5, max_row=1100, min_col=0, max_col=34
     ):  # перебираем строки
         row_data = [cell.value for cell in row]  # создаем список
         list_gup.append(row_data)  # добавляем в список
@@ -48,7 +48,9 @@ async def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
     if date is None or len(date.split(".")) != 3:
         return
 
-    day, month, year = date.split(".")  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
+    day, month, year = date.split(
+        "."
+    )  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
 
     context = {
         "name_surname": f" {row.a5} ",  # Ф.И.О. (Иванов Иван Иванович)
@@ -88,7 +90,9 @@ async def record_data_salary(row, formatted_date, ending, file_dog):
     if date is None or len(date.split(".")) != 3:
         return
 
-    day, month, year = date.split(".")  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
+    day, month, year = date.split(
+        "."
+    )  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
 
     context = {
         "name_surname": f" {row.a5} ",  # Ф.И.О. (Иванов Иван Иванович)
@@ -142,7 +146,7 @@ async def creation_contracts(row, formatted_date, ending):
                         "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_уборщ_8_часов.docx",
                     )
                 elif (
-                        row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_подземные"
+                    row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_подземные"
                 ):  # 12 часов
                     await record_data_salary(
                         row,
@@ -172,8 +176,8 @@ async def creation_contracts(row, formatted_date, ending):
                         "Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_7_часов.docx",
                     )
                 elif (
-                        row.a34
-                        == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7"
+                    row.a34
+                    == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7"
                 ):
                     await record_data_salary(
                         row,
@@ -220,7 +224,7 @@ async def creation_contracts(row, formatted_date, ending):
                         "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_уборщ_8_часов.docx",
                     )
                 elif (
-                        row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_подземные"
+                    row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_подземные"
                 ):  # 12 часов
                     await filling_data_hourly_rate(
                         row,
@@ -252,8 +256,8 @@ async def creation_contracts(row, formatted_date, ending):
                         "Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_7_часов.docx",
                     )
                 elif (
-                        row.a34
-                        == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7"
+                    row.a34
+                    == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7"
                 ):
                     await filling_data_hourly_rate(
                         row,

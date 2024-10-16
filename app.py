@@ -19,12 +19,6 @@ async def index():
     return await render_template("index.html")
 
 
-# @app.route("/loading")
-# async def loading():
-#     """Сообщение, что база данных формируется"""
-#     return await render_template("loading.html")
-
-
 async def run_import():
     # Импорт данных из Excel в базе данных в фоне
     await import_excel_to_db()
@@ -136,4 +130,4 @@ async def action():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='172.25.1.162', port='8000', debug=True)
