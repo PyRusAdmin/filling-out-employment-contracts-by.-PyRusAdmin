@@ -4,53 +4,9 @@
     <meta charset="UTF-8">
     <title>Получение трудового договора</title>
     <style>
-        /* Центрирование контента и использование всей высоты */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Заполнение всей высоты окна */
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        /* Форматирование формы для использования всего экрана */
-        form {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        fieldset {
-            border: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        /* Заголовок формы */
-        legend {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* Визуальные стили для input */
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0 20px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        /* Стили для кнопок */
+       /* From Uiverse.io by xueyuantan */
         button {
-            width: 100%;
+            width: 9em;
             height: 3em;
             border-radius: 30em;
             font-size: 15px;
@@ -61,9 +17,7 @@
             z-index: 1;
             box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
             transition: .5s ease; /* Плавный переход для заливки */
-            background-color: transparent; /* Убираем основной фон */
         }
-
         button::before {
             content: '';
             width: 0; /* Начальная ширина 0 для эффекта */
@@ -77,27 +31,55 @@
             display: block;
             z-index: -1;
         }
-
         button:hover::before {
             width: 100%; /* Полная ширина кнопки при наведении */
         }
-
-        button.secondary {
-            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%); /* Вторичная кнопка с градиентом */
+        .custom-button {
+            width: 350px;
+            height: 50px; /* Увеличен размер для лучшей видимости */
+            font-size: 16px;
         }
-
     </style>
 </head>
 <body>
-    <form action="/get_contract" method="POST">
-        <fieldset>
-            <legend>Получение данных трудового договора</legend>
-            <label for="tab_number">Табельный номер (от 4 до 8 знаков):</label>
-            <input type="text" id="tab_number" name="tab_number" required minlength="4" maxlength="8" size="10"/><br><br>
-            <button type="submit">Получить договор</button>
-            <br><br>
-            <button type="submit">На главную страницу</button>
-        </fieldset>
+
+<h1>Программа для автоматизации задач</h1>
+<fieldset>
+    <legend>Выберите действие</legend>
+    <form method="post" action="{{ url_for('action') }}">
+        <button class="custom-button" type="submit" name="user_input" value="1">Парсинг документа Excel</button>
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="2">Заполнение договоров</button>
+        Заполнение трудовых договоров, по ранее сформированным шаблонам
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="3">Сравнивание и заполнение данных в Excel
+        </button>
+        <br><br>
+        <button class="custom-button" type="button" onclick="window.location.href='/import_excel_form'">
+            Записать данные в базу данных
+        </button>
+        Запись данных в базу данных с файла Списочный состав
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="5">Получить трудовой договор</button>
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="7">Очистить базу данных</button>
+        Очистка базы данных от ранее записанных данных (Списочный состав)
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="8">Заполнение дополнительных соглашений к
+            трудовым договорам
+        </button>
+        Заполнение дополнительных соглашений к трудовым договорам (Данные берутся из файла базы данных)
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="9">Заполнение дополнительных соглашений к
+            трудовым договорам на неполную рабочую неделю
+        </button>
+        Заполнение дополнительных соглашений к трудовым договорам на неполную рабочую неделю (Данные берутся из файла
+        базы
+        данных)
+        <br><br>
+        <button class="custom-button" type="submit" name="user_input" value="6">Выход</button>
+        Закрыть программу
     </form>
+</fieldset>
 </body>
 </html>

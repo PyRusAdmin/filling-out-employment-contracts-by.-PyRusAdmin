@@ -52,24 +52,54 @@ async def get_contract_form(request: Request):
     return templates.TemplateResponse("get_contract.html", {"request": request})
 
 
-@app.post("/get_contract")
-async def get_contract(tab_number: str = Form(...)):
+@app.post("/get_contract", response_class=HTMLResponse)
+async def get_contract(request: Request,tab_number: str = Form(...), ):
     logger.info(f"Введенный табельный номер: {tab_number}")
 
     if tab_number:
         data = search_employee_by_tab_number(tab_number)
         if data:
-            return {
-                "message": f"Данные для табельного номера {tab_number}",
-                "data": {'a0': data.a0, 'a1': data.a1, 'a2': data.a2, 'a3': data.a3,
-                         'a4_табельный_номер': data.a4_табельный_номер, 'a5': data.a5, 'a6': data.a6, 'a7': data.a7,
-                         'a8': data.a8, 'a9': data.a9, 'a10': data.a10, 'a11': data.a11, 'a12': data.a12,
-                         'a13': data.a13, 'a14': data.a14, 'a15': data.a15, 'a16': data.a16, 'a17': data.a17,
-                         'a18': data.a18, 'a19': data.a19, 'a20': data.a20, 'a21': data.a21, 'a22': data.a22,
-                         'a23': data.a23, 'a24': data.a24, 'a25_номер_договора': data.a25_номер_договора,
-                         'a26': data.a26, 'a27': data.a27, 'a28': data.a28, 'a29': data.a29, 'a30': data.a30,
-                         'a31': data.a31, 'a32': data.a32, 'a33': data.a33, 'a34': data.a34, },
-            }
+            return templates.TemplateResponse("contract_data.html", {
+                "request": request,
+                "tab_number": tab_number,
+                "data": {
+                    'КСП': data.a0,
+                    'наименование ксп': data.a1,
+                    'Категория': data.a2,
+                    'профессия': data.a3,
+                    'Таб №': data.a4_табельный_номер,
+                    'Ф.И.О.': data.a5,
+                    'Ф.И.О. (сокращенно)': data.a6,
+                    'Дата приема': data.a7,
+                    'Дата увольнения': data.a8,
+                    'Тариф / Оклад': data.a9,
+                    'Дата рождения': data.a10,
+                    'ПОЛ': data.a11,
+                    'Телефон': data.a12,
+                    'Адрес': data.a13,
+                    'Серия код': data.a14,
+                    'Дата выдачи': data.a15,
+                    'Кем выдан': data.a16,
+                    'Код подразделения': data.a17,
+                    'Продолжительность рабочего дня': data.a18,
+                    'Окончание': data.a19,
+                    'За ненорм.': data.a20,
+                    'Особый характер труда': data.a21,
+                    'За вредные условия труда': data.a22,
+                    'Начальники': data.a23,
+                    'Статус': data.a24,
+                    'Номер договора': data.a25_номер_договора,
+                    'Профессия': data.a26,
+                    'Профессия с разрядами': data.a27,
+                    'Профессия в родительном падеже': data.a28,
+                    'Дополнительный отпуск': data.a29,
+                    'дата договора': data.a30,
+                    'Готовность': data.a31,
+                    'Дата перевода (приема) и номер приказа': data.a32,
+                    'Договор / дополнительное соглашение': data.a33,
+                    'Тип шаблона': data.a34
+                }
+            })
         else:
             return {"message": f"Данные для табельного номера {tab_number} не найдены."}
     raise HTTPException(status_code=400, detail="Табельный номер не указан.")
