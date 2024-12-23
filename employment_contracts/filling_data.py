@@ -39,7 +39,7 @@ async def open_list_gup():
 
 
 async def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
-    """Часовая тарифная ставка"""
+    """Заполнение трудовых договоров. Часовая тарифная ставка"""
 
     doc = DocxTemplate(file_dog)
     date = row.a30
@@ -81,7 +81,7 @@ async def filling_data_hourly_rate(row, formatted_date, ending, file_dog):
 
 
 async def record_data_salary(row, formatted_date, ending, file_dog):
-    """Должностной оклад"""
+    """Заполнение трудовых договоров. Должностной оклад"""
 
     doc = DocxTemplate(file_dog)
     date = row.a30  # дата трудового договора

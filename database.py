@@ -15,7 +15,7 @@ class Employee(Model):
     a4_табельный_номер = CharField(null=True)
     a5 = CharField(null=True)
     a6 = CharField(null=True)
-    a7 = CharField(null=True) # Дата поступление на предприятие
+    a7 = CharField(null=True)  # Дата поступление на предприятие
     a8 = CharField(null=True)
     a9 = CharField(null=True)
     a10 = CharField(null=True)
@@ -39,7 +39,7 @@ class Employee(Model):
     a28 = CharField(null=True)
     a29 = CharField(null=True)
     a30 = CharField(null=True)
-    a31 = CharField(null=True) # напечатанный
+    a31 = CharField(null=True)  # напечатанный
     a32 = CharField(null=True)
     a33 = CharField(null=True)
     a34 = CharField(null=True)
@@ -104,6 +104,7 @@ async def import_excel_to_db():
     db.close()  # Закрываем подключение к базе данных
     logger.info("Данные из Excel импортированы в базу данных.")
 
+
 async def read_from_db():
     """Функция для чтения данных из базы данных. Считываем данные из базы данных"""
     db.connect()
@@ -126,4 +127,4 @@ async def clear_database():
 
 if __name__ == "__main__":
     import_excel_to_db()
-    clear_database() # Очистка базы данных
+    clear_database()  # Очистка базы данных

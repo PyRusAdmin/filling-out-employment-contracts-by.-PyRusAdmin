@@ -20,10 +20,10 @@ templates = Jinja2Templates(directory="templates")
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
 
-
 @app.get('/database_cleanup', response_class=HTMLResponse)
 async def database_cleanup(request: Request):
     return templates.TemplateResponse("database_cleanup.html", {"request": request})
+
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -196,7 +196,6 @@ async def action(request: Request, user_input: str = Form(...)):
             finish = datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info("Время окончания: " + str(finish))
             logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
-
 
         # Добавьте логику для других действий
         return RedirectResponse(url="/", status_code=303)

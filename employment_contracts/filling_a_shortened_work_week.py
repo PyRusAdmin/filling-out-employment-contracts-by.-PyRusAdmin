@@ -10,7 +10,7 @@ not_a_full_work_week = [
 
 
 async def record_data_salary_downtime_week(row, formatted_date, ending, file_dog):
-    """Должностной оклад"""
+    """Заполнение дополнительных соглашений на не полную рабочую неделю"""
 
     doc = DocxTemplate(file_dog)
     date = row.a30  # дата трудового договора
