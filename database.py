@@ -59,7 +59,7 @@ async def import_excel_to_db():
     db.create_tables([Employee], safe=True)
 
     # Импортируем данные
-    for row in ws.iter_rows(min_row=5, max_row=1082, min_col=0, max_col=40):
+    for row in ws.iter_rows(min_row=4, max_row=1105, min_col=0, max_col=40):
         row_data = [cell.value for cell in row]
 
         # Создаем запись в базе данных
@@ -104,15 +104,23 @@ async def import_excel_to_db():
     db.close()  # Закрываем подключение к базе данных
     logger.info("Данные из Excel импортированы в базу данных.")
 
-
-# Функция для чтения данных из базы данных
 async def read_from_db():
-    """Считываем данные из базы данных"""
+    """Функция для чтения данных из базы данных. Считываем данные из базы данных"""
     db.connect()
     rows = Employee.select()  # Получаем все записи из таблицы employees
     db.close()  # Закрываем подключение к базе данных
     return rows
 
+
+async def clear_database():
+    """Функция для очистки базы данных. Удаляет все записи из таблицы Employee."""
+    try:
+        db.connect()
+        deleted_count = Employee.delete().execute()
+        db.close()
+        logger.info(f"База данных очищена. Удалено записей: {deleted_count}")
+    except Exception as e:
+        logger.exception("Ошибка при очистке базы данных: ", e)
 
 if __name__ == "__main__":
     import_excel_to_db()
