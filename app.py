@@ -1,13 +1,18 @@
+import asyncio
 from datetime import datetime
-from fastapi import FastAPI, Form, Request, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
+
+from fastapi import FastAPI, Form, Request
+from fastapi import HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
-from database import import_excel_to_db, read_from_db
-from filling_data import creation_contracts, format_date
+
+from database import import_excel_to_db, read_from_db, clear_database
+from employment_contracts.filling_data import creation_contracts, format_date
+from employment_contracts.filling_plant_downtime import creation_contracts_downtime
 from get import Employee
 from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
-import asyncio
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -18,9 +23,6 @@ progress_messages = []  # список сообщений, которые буд
 @app.get('/database_cleanup', response_class=HTMLResponse)
 async def database_cleanup(request: Request):
     return templates.TemplateResponse("database_cleanup.html", {"request": request})
-
-
-
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -81,9 +83,10 @@ async def get_contract(tab_number: str = Form(...)):
     raise HTTPException(status_code=400, detail="Табельный номер не указан.")
 
 
-@app.post("/action")
-async def action(user_input: int = Form(...)):
+@app.post("/action", response_class=HTMLResponse)
+async def action(request: Request, user_input: str = Form(...)):
     try:
+        user_input = int(user_input)  # Преобразуем строку в число
         if user_input == 1:
             await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
 
@@ -126,6 +129,47 @@ async def action(user_input: int = Form(...)):
         elif user_input == 6:  # Выключение приложения
             exit()
 
+        elif user_input == 7:  # Очистить базу данных
+            try:
+                await clear_database()  # Асинхронная очистка базы данных
+                logger.info("База данных успешно очищена.")
+                return templates.TemplateResponse(
+                    "database_cleanup.html",
+                    {"request": request, "message": "База данных успешно очищена!"},
+                )
+            except Exception as e:
+                logger.exception("Ошибка при очистке базы данных.")
+                return templates.TemplateResponse(
+                    "database_cleanup.html", {"request": request, "message": f"Ошибка: {e}"}
+                )
+
+
+        elif user_input == 8:  # Заполнение дополнительных соглашений
+            start = datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info("Время старта: " + str(start))
+            data = await read_from_db()  # Считываем данные из базы данных
+            # Выводим считанные данные на экран
+            for row in data:
+                logger.info(row)
+                if row.a11 == "Мужчина":  # гендерное определение
+                    ending = "ый"
+                    await creation_contracts_downtime(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+                elif row.a11 == "Женщина":  # гендерное определение
+                    ending = "ая"
+                    await creation_contracts_downtime(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info("Время окончания: " + str(finish))
+            logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+
+        # Добавьте логику для других действий
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
         logger.exception(e)

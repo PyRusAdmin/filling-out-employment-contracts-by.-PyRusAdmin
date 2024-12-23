@@ -72,12 +72,10 @@ async def parsing_document_1(min_row, max_row, column, column_1) -> None:
     conn = sqlite3.connect(file_database)  # Создаем соединение с базой данных
     cursor = conn.cursor()
     # Создаем таблицу в базе данных, если она еще не существует
-    cursor.execute(
-        f"CREATE TABLE IF NOT EXISTS {table_name} (table_column_1, table_column_2)"
-    )
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (table_column_1, table_column_2)")
     # Считываем данные из колонки A и вставляем их в базу данных
     for row in sheet.iter_rows(
-        min_row=int(min_row), max_row=int(max_row), values_only=True
+            min_row=int(min_row), max_row=int(max_row), values_only=True
     ):
         table_column_1 = str(row[int(column)])  # Преобразуем значение в строку
         table_column_2 = str(row[int(column_1)])  # Преобразуем значение в строку

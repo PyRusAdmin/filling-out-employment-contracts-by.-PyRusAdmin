@@ -45,22 +45,35 @@
     </style>
 </head>
 <body>
-<h1>Выберите действие</h1>
+<h1>Программа для автоматизации задач</h1><br><br>
+
+<h2>Выберите действие</h2>
 <form method="post" action="{{ url_for('action') }}">
 
     <button class="custom-button" type="submit" name="user_input" value="1">Парсинг документа Excel</button>
     <br><br>
     <button class="custom-button" type="submit" name="user_input" value="2">Заполнение договоров</button>
+    Заполнение трудовых договоров, по ранее сформированным шаблонам
     <br><br>
     <button class="custom-button" type="submit" name="user_input" value="3">Сравнивание и заполнение данных в Excel
     </button>
     <br><br>
     <button class="custom-button" type="submit" name="user_input" value="4">Записать данные в базу данных</button>
+    Запись данных в базу данных с файла Списочный состав
     <br><br>
     <button class="custom-button" type="submit" name="user_input" value="5">Получить трудовой договор</button>
     <br><br>
+    <button class="custom-button" type="submit" name="user_input" value="7">Очистить базу данных</button>
+    Очистка базы данных от ранее записанных данных (Списочный состав)
+    <br><br>
+
+    <button class="custom-button" type="submit" name="user_input" value="8">Заполнение дополнительных соглашений к трудовым договорам</button>
+    Заполнение дополнительных соглашений к трудовым договорам (Данные берутся из файла базы данных)
+    <br><br>
+
 
     <button class="custom-button" type="submit" name="user_input" value="6">Выход</button>
+    Закрыть программу
 </form>
 </body>
 </html>
