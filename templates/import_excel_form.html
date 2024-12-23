@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Запись данных в базу данных</title>
+
+    <style>
+        /* From Uiverse.io by xueyuantan */
+        button {
+            width: 9em;
+            height: 3em;
+            border-radius: 30em;
+            font-size: 15px;
+            font-family: inherit;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+            transition: .5s ease; /* Плавный переход для заливки */
+        }
+
+        button::before {
+            content: '';
+            width: 0; /* Начальная ширина 0 для эффекта */
+            height: 100%; /* Высота на всю кнопку */
+            border-radius: 30em; /* Или измените на 100% */
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
+            transition: .5s ease; /* Плавный переход */
+            display: block;
+            z-index: -1;
+        }
+
+        button:hover::before {
+            width: 100%; /* Полная ширина кнопки при наведении */
+        }
+
+        .custom-button {
+            width: 350px;
+            height: 50px; /* Увеличен размер для лучшей видимости */
+            font-size: 16px;
+        }
+    </style>
+
+</head>
+<body>
+    <form action="/import_excel" method="post">
+        <fieldset>
+            <legend>Введите данные</legend>
+            <label for="min_row">Начальная строка</label>
+            <input id="min_row" name="min_row" type="number" required /><br><br>
+            <label for="max_row">Конечная строка</label>
+            <input id="max_row" name="max_row" type="number" required /><br><br>
+
+            <button class="custom-button" type="submit">Записать данные</button>
+        </fieldset>
+    </form>
+</body>
+</html>

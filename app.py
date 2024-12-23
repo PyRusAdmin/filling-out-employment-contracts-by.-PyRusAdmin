@@ -1,10 +1,8 @@
 import asyncio
 from datetime import datetime
 
-from fastapi import FastAPI, Form, Request
-from fastapi import HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
@@ -30,9 +28,20 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-async def run_import():
-    # Импорт данных из Excel в базе данных в фоне
-    await import_excel_to_db()
+@app.get("/import_excel_form", response_class=HTMLResponse)
+async def import_excel_form(request: Request):
+    return templates.TemplateResponse("import_excel_form.html", {"request": request})
+
+
+@app.post("/import_excel")
+async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
+    try:
+        logger.info(f"Запуск импорта данных с {min_row} по {max_row} строки.")
+        await import_excel_to_db(min_row=min_row, max_row=max_row)
+        return RedirectResponse(url="/", status_code=303)
+    except Exception as e:
+        logger.exception("Ошибка при импорте данных.")
+        raise HTTPException(status_code=500, detail="Произошла ошибка при импорте данных.")
 
 
 @app.get("/progress")
@@ -50,12 +59,9 @@ async def progress():
 def search_employee_by_tab_number(tab_number):
     """Ищем данные сотрудника по табельному номеру"""
     try:
-        # Поиск строки в базе данных по табельному номеру
         customer = Employee.get(Employee.a4_табельный_номер == tab_number)
-        # Возвращаем строку со всеми данными
         return customer
     except Employee.DoesNotExist:
-        # Возвращает None, если запись не найдена
         return None
 
 
@@ -66,17 +72,16 @@ async def get_contract_form(request: Request):
 
 @app.post("/get_contract")
 async def get_contract(tab_number: str = Form(...)):
-    logger.info(f"Введенный табельный номер: {tab_number}")  # Логируем введенный табельный номер
+    logger.info(f"Введенный табельный номер: {tab_number}")
     if tab_number:
         data = search_employee_by_tab_number(tab_number)
-
         if data:
             return {
                 "message": f"Данные для табельного номера {tab_number}",
                 "data": {
                     "a0": data.a0,
                     "a1": data.a1,
-                    # Добавьте остальные атрибуты по мере необходимости
+                    # Добавьте остальные атрибуты
                 },
             }
         else:
@@ -87,118 +92,75 @@ async def get_contract(tab_number: str = Form(...)):
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
     try:
-        user_input = int(user_input)  # Преобразуем строку в число
+        user_input = int(user_input)
+
         if user_input == 1:
             await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
 
         elif user_input == 2:
-            start = datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info("Время старта: " + str(start))
-            data = await read_from_db()  # Считываем данные из базы данных
-            # Выводим считанные данные на экран
+            start = datetime.now()
+            logger.info(f"Время старта: {start}")
+            data = await read_from_db()
             for row in data:
                 logger.info(row)
-                if row.a11 == "Мужчина":  # гендерное определение
-                    ending = "ый"
-                    await creation_contracts(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-                elif row.a11 == "Женщина":  # гендерное определение
-                    ending = "ая"
-                    await creation_contracts(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info("Время окончания: " + str(finish))
-            logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+                ending = "ый" if row.a11 == "Мужчина" else "ая"
+                await creation_contracts(row, await format_date(row.a7), ending)
+            finish = datetime.now()
+            logger.info(f"Время окончания: {finish}")
+            logger.info(f"Время работы: {finish - start}")
 
         elif user_input == 3:
             await compare_and_rewrite_professions()
 
-        elif user_input == 4:
-            # Запускаем асинхронный импорт данных и сразу отображаем страницу загрузки
-            await import_excel_to_db()
-            return RedirectResponse(url="/", status_code=303)
 
-        elif user_input == 5:  # Получение трудового договора
+        elif user_input == 4:
+
+            return RedirectResponse(url="/import_excel_form", status_code=303)
+
+
+        elif user_input == 5:
             return RedirectResponse(url="/get_contract", status_code=303)
 
-        elif user_input == 6:  # Выключение приложения
+        elif user_input == 6:
             exit()
 
-        elif user_input == 7:  # Очистить базу данных
+        elif user_input == 7:
             try:
-                await clear_database()  # Асинхронная очистка базы данных
+                await clear_database()
                 logger.info("База данных успешно очищена.")
-                return templates.TemplateResponse(
-                    "database_cleanup.html",
-                    {"request": request, "message": "База данных успешно очищена!"},
-                )
+                return templates.TemplateResponse("database_cleanup.html",
+                                                  {"request": request, "message": "База данных успешно очищена!"})
             except Exception as e:
                 logger.exception("Ошибка при очистке базы данных.")
-                return templates.TemplateResponse(
-                    "database_cleanup.html", {"request": request, "message": f"Ошибка: {e}"}
-                )
+                return templates.TemplateResponse("database_cleanup.html",
+                                                  {"request": request, "message": f"Ошибка: {e}"})
 
-
-        elif user_input == 8:  # Заполнение дополнительных соглашений
-            start = datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info("Время старта: " + str(start))
-            data = await read_from_db()  # Считываем данные из базы данных
-            # Выводим считанные данные на экран
+        elif user_input == 8:
+            start = datetime.now()
+            logger.info(f"Время старта: {start}")
+            data = await read_from_db()
             for row in data:
                 logger.info(row)
-                if row.a11 == "Мужчина":  # гендерное определение
-                    ending = "ый"
-                    await creation_contracts_downtime(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-                elif row.a11 == "Женщина":  # гендерное определение
-                    ending = "ая"
-                    await creation_contracts_downtime(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info("Время окончания: " + str(finish))
-            logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+                ending = "ый" if row.a11 == "Мужчина" else "ая"
+                await creation_contracts_downtime(row, await format_date(row.a7), ending)
+            finish = datetime.now()
+            logger.info(f"Время окончания: {finish}")
+            logger.info(f"Время работы: {finish - start}")
 
-
-
-        elif user_input == 9:  # Заполнение дополнительных соглашений на не полную рабочую неделю
-            start = datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info("Время старта: " + str(start))
-            data = await read_from_db()  # Считываем данные из базы данных
-            # Выводим считанные данные на экран
+        elif user_input == 9:
+            start = datetime.now()
+            logger.info(f"Время старта: {start}")
+            data = await read_from_db()
             for row in data:
                 logger.info(row)
-                if row.a11 == "Мужчина":  # гендерное определение
-                    ending = "ый"
-                    await creation_contracts_downtime_week(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-                elif row.a11 == "Женщина":  # гендерное определение
-                    ending = "ая"
-                    await creation_contracts_downtime_week(
-                        row,
-                        await format_date(row.a7),  # дата поступления на предприятие
-                        ending,
-                    )
-            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info("Время окончания: " + str(finish))
-            logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+                ending = "ый" if row.a11 == "Мужчина" else "ая"
+                await creation_contracts_downtime_week(row, await format_date(row.a7), ending)
+            finish = datetime.now()
+            logger.info(f"Время окончания: {finish}")
+            logger.info(f"Время работы: {finish - start}")
 
-        # Добавьте логику для других действий
         return RedirectResponse(url="/", status_code=303)
+
     except Exception as e:
         logger.exception(e)
         raise HTTPException(status_code=500, detail="Произошла ошибка.")

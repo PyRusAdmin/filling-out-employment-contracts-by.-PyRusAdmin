@@ -49,7 +49,7 @@ class Employee(Model):
 
 
 # Функция для импорта данных из Excel в базу данных
-async def import_excel_to_db():
+async def import_excel_to_db(min_row, max_row):
     file = "list_gup/Списочный_состав.xlsx"
     wb = op.load_workbook(file)
     ws = wb.active
@@ -59,7 +59,7 @@ async def import_excel_to_db():
     db.create_tables([Employee], safe=True)
 
     # Импортируем данные
-    for row in ws.iter_rows(min_row=5, max_row=1105, min_col=0, max_col=40):
+    for row in ws.iter_rows(min_row=min_row, max_row=max_row, min_col=0, max_col=40):
         row_data = [cell.value for cell in row]
 
         # Создаем запись в базе данных
