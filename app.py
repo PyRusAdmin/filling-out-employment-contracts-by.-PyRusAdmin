@@ -1,8 +1,7 @@
-import asyncio
 from datetime import datetime
 
 from fastapi import FastAPI, Form, Request, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
@@ -39,18 +38,6 @@ async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
         raise HTTPException(status_code=500, detail="Произошла ошибка при импорте данных.")
 
 
-@app.get("/progress")
-async def progress():
-    async def generate():
-        while True:
-            if progress_messages:
-                message = progress_messages.pop(0)
-                yield f"data: {message}\n\n"
-            await asyncio.sleep(1)
-
-    return StreamingResponse(generate(), media_type="text/event-stream")
-
-
 def search_employee_by_tab_number(tab_number):
     """Ищем данные сотрудника по табельному номеру"""
     try:
@@ -68,16 +55,20 @@ async def get_contract_form(request: Request):
 @app.post("/get_contract")
 async def get_contract(tab_number: str = Form(...)):
     logger.info(f"Введенный табельный номер: {tab_number}")
+
     if tab_number:
         data = search_employee_by_tab_number(tab_number)
         if data:
             return {
                 "message": f"Данные для табельного номера {tab_number}",
-                "data": {
-                    "a0": data.a0,
-                    "a1": data.a1,
-                    # Добавьте остальные атрибуты
-                },
+                "data": {'a0': data.a0, 'a1': data.a1, 'a2': data.a2, 'a3': data.a3,
+                         'a4_табельный_номер': data.a4_табельный_номер, 'a5': data.a5, 'a6': data.a6, 'a7': data.a7,
+                         'a8': data.a8, 'a9': data.a9, 'a10': data.a10, 'a11': data.a11, 'a12': data.a12,
+                         'a13': data.a13, 'a14': data.a14, 'a15': data.a15, 'a16': data.a16, 'a17': data.a17,
+                         'a18': data.a18, 'a19': data.a19, 'a20': data.a20, 'a21': data.a21, 'a22': data.a22,
+                         'a23': data.a23, 'a24': data.a24, 'a25_номер_договора': data.a25_номер_договора,
+                         'a26': data.a26, 'a27': data.a27, 'a28': data.a28, 'a29': data.a29, 'a30': data.a30,
+                         'a31': data.a31, 'a32': data.a32, 'a33': data.a33, 'a34': data.a34, },
             }
         else:
             return {"message": f"Данные для табельного номера {tab_number} не найдены."}
@@ -116,8 +107,6 @@ async def action(request: Request, user_input: str = Form(...)):
         elif user_input == 5:
             return RedirectResponse(url="/get_contract", status_code=303)
 
-        elif user_input == 6:
-            exit()
 
         elif user_input == 7:
             try:
