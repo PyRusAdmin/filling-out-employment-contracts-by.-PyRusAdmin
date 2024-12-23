@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from loguru import logger
 
 from database import import_excel_to_db, read_from_db, clear_database
+from employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
 from employment_contracts.filling_data import creation_contracts, format_date
 from employment_contracts.filling_plant_downtime import creation_contracts_downtime
 from get import Employee
@@ -168,6 +169,34 @@ async def action(request: Request, user_input: str = Form(...)):
             finish = datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info("Время окончания: " + str(finish))
             logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+
+
+
+        elif user_input == 9:  # Заполнение дополнительных соглашений на не полную рабочую неделю
+            start = datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info("Время старта: " + str(start))
+            data = await read_from_db()  # Считываем данные из базы данных
+            # Выводим считанные данные на экран
+            for row in data:
+                logger.info(row)
+                if row.a11 == "Мужчина":  # гендерное определение
+                    ending = "ый"
+                    await creation_contracts_downtime_week(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+                elif row.a11 == "Женщина":  # гендерное определение
+                    ending = "ая"
+                    await creation_contracts_downtime_week(
+                        row,
+                        await format_date(row.a7),  # дата поступления на предприятие
+                        ending,
+                    )
+            finish = datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info("Время окончания: " + str(finish))
+            logger.info("Время работы: " + str(finish - start))  # вычитаем время старта из времени окончания
+
 
         # Добавьте логику для других действий
         return RedirectResponse(url="/", status_code=303)

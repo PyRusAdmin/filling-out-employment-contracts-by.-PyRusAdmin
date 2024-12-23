@@ -2,12 +2,14 @@
 from docxtpl import DocxTemplate
 from loguru import logger
 
-# на простой
-not_a_full_work_week = [7123, 856, 1268, 1188, 5429, 23511, 4211, 3307, 10851, 10800, 3639, 11073, 8065, 13103,
-                        13533, 7006, 7687, 15293, 17503, 17553, 12608, 600036, 12537, ]
+# не полная рабочая неделя
+not_a_full_work_week = [
+    7123, 12212, 856, 1268, 1188, 5429, 23173, 23511, 4211, 3307, 10851, 10800, 3639, 11073, 8065, 13103, 13533, 7006,
+    7687, 15293, 17503, 17553, 12608, 600036, 12537,
+]
 
 
-async def record_data_salary_downtime(row, formatted_date, ending, file_dog):
+async def record_data_salary_downtime_week(row, formatted_date, ending, file_dog):
     """Должностной оклад"""
 
     doc = DocxTemplate(file_dog)
@@ -47,18 +49,18 @@ async def record_data_salary_downtime(row, formatted_date, ending, file_dog):
     }
 
     doc.render(context)
-    doc.save(f"Готовые_дополнительные_договора/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
+    doc.save(f"Готовые_дополнительные_соглашения_не_полная_рабочая_неделя/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
 
 
-async def creation_contracts_downtime(row, formatted_date, ending):
+async def creation_contracts_downtime_week(row, formatted_date, ending):
     try:
         # Проверяем, входит ли табельный номер в список
         if int(row.a4_табельный_номер) in not_a_full_work_week:
-            await record_data_salary_downtime(
+            await record_data_salary_downtime_week(
                 row,
                 formatted_date,
                 ending,
-                "Шаблоны_дополнительных_соглашений/доп_соглашение_к_трудовому_договору_простой.docx",
+                "Шаблоны_дополнительных_соглашений/доп_соглашение_к_трудовому_договору_неполное_раб_время.docx",
             )
         else:
             logger.info(f"Табельный номер {row.a4_табельный_номер} не входит в список. Договор не будет сформирован.")
