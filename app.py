@@ -18,11 +18,6 @@ templates = Jinja2Templates(directory="templates")
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
 
-@app.get('/database_cleanup', response_class=HTMLResponse)
-async def database_cleanup(request: Request):
-    return templates.TemplateResponse("database_cleanup.html", {"request": request})
-
-
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
