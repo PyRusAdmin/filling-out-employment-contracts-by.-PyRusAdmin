@@ -49,7 +49,8 @@ async def record_data_salary_downtime_week(row, formatted_date, ending, file_dog
     }
 
     doc.render(context)
-    doc.save(f"Готовые_дополнительные_соглашения_не_полная_рабочая_неделя/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
+    doc.save(
+        f"Готовые_дополнительные_соглашения_не_полная_рабочая_неделя/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
 
 
 async def creation_contracts_downtime_week(row, formatted_date, ending):

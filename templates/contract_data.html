@@ -46,23 +46,23 @@
     </style>
 </head>
 <body>
-    <h2>Данные для табельного номера {{ tab_number }}</h2>
+<h2>Данные для табельного номера {{ tab_number }}</h2>
 
-    <table class="data-table">
-        <tr>
-            <th>Поле</th>
-            <th>Значение</th>
-        </tr>
-        {% for key, value in data.items() %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<table class="data-table">
+    <tr>
+        <th>Поле</th>
+        <th>Значение</th>
+    </tr>
+    {% for key, value in data.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
-    <form action="/" method="get">
-        <button type="submit" class="back-button">На главную</button>
-    </form>
+<form action="/" method="get">
+    <button type="submit" class="back-button">На главную</button>
+</form>
 </body>
 </html>

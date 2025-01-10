@@ -53,7 +53,7 @@ async def get_contract_form(request: Request):
 
 
 @app.post("/get_contract", response_class=HTMLResponse)
-async def get_contract(request: Request,tab_number: str = Form(...), ):
+async def get_contract(request: Request, tab_number: str = Form(...), ):
     logger.info(f"Введенный табельный номер: {tab_number}")
 
     if tab_number:
