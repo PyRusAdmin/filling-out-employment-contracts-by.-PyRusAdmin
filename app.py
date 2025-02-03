@@ -19,16 +19,19 @@ progress_messages = []  # список сообщений, которые буд
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    """Главная страница"""
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/import_excel_form", response_class=HTMLResponse)
 async def import_excel_form(request: Request):
+    """Страница импорта данных из файла"""
     return templates.TemplateResponse("import_excel_form.html", {"request": request})
 
 
 @app.post("/import_excel")
 async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
+    """Импорт данных из файла"""
     try:
         logger.info(f"Запуск импорта данных с {min_row} по {max_row} строки.")
         await import_excel_to_db(min_row=min_row, max_row=max_row)
@@ -49,11 +52,13 @@ def search_employee_by_tab_number(tab_number):
 
 @app.get("/get_contract", response_class=HTMLResponse)
 async def get_contract_form(request: Request):
+    """Страница получения данных сотрудника"""
     return templates.TemplateResponse("get_contract.html", {"request": request})
 
 
 @app.post("/get_contract", response_class=HTMLResponse)
 async def get_contract(request: Request, tab_number: str = Form(...), ):
+    """Получение данных сотрудника"""
     logger.info(f"Введенный табельный номер: {tab_number}")
 
     if tab_number:
@@ -107,6 +112,8 @@ async def get_contract(request: Request, tab_number: str = Form(...), ):
 
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
+    """Выполнение действий"""
+    logger.info(f"Выбранное действие: {user_input}")
     try:
         user_input = int(user_input)
 

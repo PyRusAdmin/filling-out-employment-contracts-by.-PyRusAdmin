@@ -47,7 +47,7 @@ async def record_data_salary_downtime(row, formatted_date, ending, file_dog):
     }
 
     doc.render(context)
-    doc.save(f"Готовые_дополнительные_договора/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
+    doc.save(f"outgoing/Готовые_дополнительные_договора/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
 
 
 async def creation_contracts_downtime(row, formatted_date, ending):
@@ -58,7 +58,7 @@ async def creation_contracts_downtime(row, formatted_date, ending):
                 row,
                 formatted_date,
                 ending,
-                "Шаблоны_дополнительных_соглашений/доп_соглашение_к_трудовому_договору_простой.docx",
+                "templates_contracts/Шаблоны_дополнительных_соглашений/доп_соглашение_к_трудовому_договору_простой.docx",
             )
         else:
             logger.info(f"Табельный номер {row.a4_табельный_номер} не входит в список. Договор не будет сформирован.")
