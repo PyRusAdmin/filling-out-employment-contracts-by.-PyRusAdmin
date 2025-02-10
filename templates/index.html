@@ -2,83 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Получение трудового договора</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Добавляем viewport для адаптивности -->
+    <title>Программа для автоматизации задач</title>
     <style>
-        /* From Uiverse.io by xueyuantan */
+        /* Основные стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* Центрирование по вертикали */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4caf50;
+        }
+
+        fieldset {
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%; /* Адаптивная ширина */
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        legend {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        form {
+            display: grid;
+            gap: 15px;
+        }
+
         button {
-            width: 9em;
-            height: 3em;
-            border-radius: 30em;
-            font-size: 15px;
-            font-family: inherit;
+            width: 90%; /* Занимает всю доступную ширину */
+            height: 35px;
             border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-family: inherit;
+            color: #fff;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            transition: transform 0.3s ease;
+            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
             box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-            transition: .5s ease; /* Плавный переход для заливки */
         }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
         button::before {
             content: '';
-            width: 0; /* Начальная ширина 0 для эффекта */
-            height: 100%; /* Высота на всю кнопку */
-            border-radius: 30em; /* Или измените на 100% */
+            width: 0;
+            height: 100%;
+            border-radius: 30px;
             position: absolute;
             top: 0;
             left: 0;
-            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
-            transition: .5s ease; /* Плавный переход */
-            display: block;
+            background-image: linear-gradient(to right, #00b894 0%, #ffbe76 100%);
+            transition: width 0.5s ease;
             z-index: -1;
         }
+
         button:hover::before {
-            width: 100%; /* Полная ширина кнопки при наведении */
+            width: 100%;
         }
-        .custom-button {
-            width: 350px;
-            height: 50px; /* Увеличен размер для лучшей видимости */
-            font-size: 16px;
+
+        .description {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0 0;
+            word-wrap: break-word; /* Перенос текста при необходимости */
+        }
+
+        /* Медиа-запросы для маленьких экранов */
+        @media (max-width: 600px) {
+            button {
+                height: 40px; /* Уменьшаем высоту кнопок */
+                font-size: 14px; /* Уменьшаем размер шрифта */
+            }
+
+            .description {
+                font-size: 12px; /* Уменьшаем размер шрифта описания */
+            }
         }
     </style>
 </head>
 <body>
-
 <h1>Программа для автоматизации задач</h1>
 <fieldset>
     <legend>Выберите действие</legend>
     <form method="post" action="{{ url_for('action') }}">
-        <button class="custom-button" type="submit" name="user_input" value="1">Парсинг документа Excel</button>
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="2">Заполнение договоров</button>
-        Заполнение трудовых договоров, по ранее сформированным шаблонам
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="3">Сравнивание и заполнение данных в Excel
+        <div class="description">Извлечение данных из файла Excel.</div>
+        <button type="submit" name="user_input" value="1">Парсинг документа Excel</button>
+
+        <div class="description">Заполнение трудовых договоров по шаблонам.</div>
+        <button type="submit" name="user_input" value="2">Заполнение договоров</button>
+
+        <div class="description">Сравнение данных и их запись в файл Excel.</div>
+        <button type="submit" name="user_input" value="3">Сравнивание и заполнение данных в Excel</button>
+
+        <div class="description">Запись данных из файла "Списочный состав" в базу данных.</div>
+        <button type="button" onclick="window.location.href='/import_excel_form'">Записать данные в базу данных</button>
+
+        <div class="description">Формирование и получение трудового договора.</div>
+        <button type="submit" name="user_input" value="5">Получить трудовой договор</button>
+
+        <div class="description">Очистка базы данных от ранее записанных данных.</div>
+        <button type="submit" name="user_input" value="7">Очистить базу данных</button>
+
+        <div class="description">Формирование дополнительных соглашений к трудовым договорам.</div>
+        <button type="submit" name="user_input" value="8">Заполнение дополнительных соглашений к трудовым договорам
         </button>
-        <br><br>
-        <button class="custom-button" type="button" onclick="window.location.href='/import_excel_form'">
-            Записать данные в базу данных
+
+        <div class="description">Формирование соглашений на неполную рабочую неделю.</div>
+        <button type="submit" name="user_input" value="9">Заполнение дополнительных соглашений на неполную рабочую
+            неделю
         </button>
-        Запись данных в базу данных с файла Списочный состав
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="5">Получить трудовой договор</button>
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="7">Очистить базу данных</button>
-        Очистка базы данных от ранее записанных данных (Списочный состав)
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="8">Заполнение дополнительных соглашений к
-            трудовым договорам
+
+        <div class="description">Запись дополнительного соглашения по состоянию здоровья</div>
+        <button type="submit" name="user_input" value="10">Заполнение дополнительных соглашений по состоянию здоровья
         </button>
-        Заполнение дополнительных соглашений к трудовым договорам (Данные берутся из файла базы данных)
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="9">Заполнение дополнительных соглашений к
-            трудовым договорам на неполную рабочую неделю
-        </button>
-        Заполнение дополнительных соглашений к трудовым договорам на неполную рабочую неделю (Данные берутся из файла
-        базы
-        данных)
-        <br><br>
-        <button class="custom-button" type="submit" name="user_input" value="6">Выход</button>
-        Закрыть программу
+
+        <div class="description">Закрытие программы.</div>
+        <button type="submit" name="user_input" value="6">Выход</button>
+
     </form>
 </fieldset>
 </body>

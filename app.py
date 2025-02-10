@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from loguru import logger
 
 from database import import_excel_to_db, read_from_db, clear_database
+from employment_contracts.additional_agreement import creation_contracts_additional_agreement
 from employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
 from employment_contracts.filling_data import creation_contracts, format_date
 from employment_contracts.filling_plant_downtime import creation_contracts_downtime
@@ -176,6 +177,18 @@ async def action(request: Request, user_input: str = Form(...)):
                 logger.info(row)
                 ending = "ый" if row.a11 == "Мужчина" else "ая"
                 await creation_contracts_downtime_week(row, await format_date(row.a7), ending)
+            finish = datetime.now()
+            logger.info(f"Время окончания: {finish}")
+            logger.info(f"Время работы: {finish - start}")
+
+        elif user_input == 10:
+            start = datetime.now()
+            logger.info(f"Время старта: {start}")
+            data = await read_from_db()
+            for row in data:
+                logger.info(row)
+                ending = "ый" if row.a11 == "Мужчина" else "ая"
+                await creation_contracts_additional_agreement(row, await format_date(row.a7), ending)
             finish = datetime.now()
             logger.info(f"Время окончания: {finish}")
             logger.info(f"Время работы: {finish - start}")
