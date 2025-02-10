@@ -22,8 +22,8 @@ async def record_data_salary_downtime(row, formatted_date, ending, file_dog):
     )  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
 
     context = {
-        "name_surname": f" {row.a5} ",  # Ф.И.О. (Иванов Иван Иванович)
-        "name_surname_completely": f" {row.a6} ",  # Ф.И.О. (Иванов И. И.)
+        "name_surname": f" {row.a5} ",  # ФИО (Иванов Иван Иванович)
+        "name_surname_completely": f" {row.a6} ",  # ФИО (Иванов И. И.)
         "date_admission": f" {formatted_date} ",  # Дата поступления
         "ending": f"{ending}",  # Окончание ый или ая
         "post": f" {row.a3} ",  # Должность
