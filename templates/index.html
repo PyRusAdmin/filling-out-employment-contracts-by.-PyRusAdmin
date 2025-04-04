@@ -1,149 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Добавляем viewport для адаптивности -->
-    <title>Программа для автоматизации задач</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программа для автоматизации задач предприятия</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Основные стили */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
+            padding: 20px;
+            background-color: #f0f2f5;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column; /* Центрирование по вертикали */
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         h1 {
+            color: #1a73e8;
+            font-size: 1.8em;
+            margin: 0;
             text-align: center;
-            margin-bottom: 20px;
-            color: #4caf50;
         }
 
-        fieldset {
-            border: 2px solid #4caf50;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 90%; /* Адаптивная ширина */
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        legend {
-            font-size: 18px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        form {
+        .grid-container {
             display: grid;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
-        button {
-            width: 90%; /* Занимает всю доступную ширину */
-            height: 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-family: inherit;
-            color: #fff;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: transform 0.3s ease;
-            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
-            box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
 
-        button:hover {
-            transform: scale(1.05);
+        .feature-card:hover {
+            transform: translateY(-5px);
         }
 
-        button::before {
-            content: '';
-            width: 0;
-            height: 100%;
-            border-radius: 30px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-image: linear-gradient(to right, #00b894 0%, #ffbe76 100%);
-            transition: width 0.5s ease;
-            z-index: -1;
+        .feature-icon {
+            font-size: 2.2em;
+            color: #1a73e8;
+            margin-bottom: 15px;
         }
 
-        button:hover::before {
-            width: 100%;
+        .feature-title {
+            font-size: 1.2em;
+            color: #2d2d2d;
+            margin: 10px 0;
         }
 
-        .description {
-            font-size: 14px;
+        .feature-description {
             color: #666;
-            margin: 5px 0 0;
-            word-wrap: break-word; /* Перенос текста при необходимости */
+            font-size: 0.9em;
+            line-height: 1.5;
         }
 
-        /* Медиа-запросы для маленьких экранов */
-        @media (max-width: 600px) {
-            button {
-                height: 40px; /* Уменьшаем высоту кнопок */
-                font-size: 14px; /* Уменьшаем размер шрифта */
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a73e8, #6aa8fd);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .action-button:hover {
+            background: linear-gradient(135deg, #1557b0, #4a8df7);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
             }
 
-            .description {
-                font-size: 12px; /* Уменьшаем размер шрифта описания */
+            .feature-card {
+                padding: 15px;
+            }
+
+            .action-button {
+                padding: 10px;
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
-<h1>Программа для автоматизации задач</h1>
-<fieldset>
-    <legend>Выберите действие</legend>
-    <form method="post" action="{{ url_for('action') }}">
-        <div class="description">Извлечение данных из файла Excel.</div>
-        <button type="submit" name="user_input" value="1">Парсинг документа Excel</button>
+    <div class="app-container">
+        <header>
+            <h1>Система автоматизации предприятия</h1>
+        </header>
 
-        <div class="description">Заполнение трудовых договоров по шаблонам.</div>
-        <button type="submit" name="user_input" value="2">Заполнение договоров</button>
+        <div class="grid-container">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-file-excel"></i></div>
+                <div class="feature-title">Извлечение данных из Excel</div>
+                <div class="feature-description">Эффективное извлечение и обработка данных из Excel-документов</div>
+                <button class="action-button" onclick="handleAction(1)">Обработать Excel</button>
+            </div>
 
-        <div class="description">Сравнение данных и их запись в файл Excel.</div>
-        <button type="submit" name="user_input" value="3">Сравнивание и заполнение данных в Excel</button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
+                <div class="feature-title">Формирование договоров</div>
+                <div class="feature-description">Автоматизация создания трудовых договоров по шаблонам</div>
+                <button class="action-button" onclick="handleAction(2)">Создать договоры</button>
+            </div>
 
-        <div class="description">Запись данных из файла "Списочный состав" в базу данных.</div>
-        <button type="button" onclick="window.location.href='/import_excel_form'">Записать данные в базу данных</button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+                <div class="feature-title">Сравнение данных</div>
+                <div class="feature-description">Сравнение наборов данных и экспорт результатов в Excel</div>
+                <button class="action-button" onclick="handleAction(3)">Сравнить данные</button>
+            </div>
 
-        <div class="description">Формирование и получение трудового договора.</div>
-        <button type="submit" name="user_input" value="5">Получить трудовой договор</button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-database"></i></div>
+                <div class="feature-title">Управление БД</div>
+                <div class="feature-description">Импорт/экспорт данных в центральную базу данных</div>
+                <button class="action-button" onclick="location.href='/import_excel_form'">Работа с БД</button>
+            </div>
 
-        <div class="description">Очистка базы данных от ранее записанных данных.</div>
-        <button type="submit" name="user_input" value="7">Очистить базу данных</button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+                <div class="feature-title">Получение документов</div>
+                <div class="feature-description">Формирование и выгрузка трудовых договоров</div>
+                <button class="action-button" onclick="handleAction(5)">Получить договор</button>
+            </div>
 
-        <div class="description">Формирование дополнительных соглашений к трудовым договорам.</div>
-        <button type="submit" name="user_input" value="8">Заполнение дополнительных соглашений к трудовым договорам
-        </button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-broom"></i></div>
+                <div class="feature-title">Очистка данных</div>
+                <div class="feature-description">Удаление устаревших записей из базы данных</div>
+                <button class="action-button" onclick="handleAction(7)">Очистить БД</button>
+            </div>
 
-        <div class="description">Формирование соглашений на неполную рабочую неделю.</div>
-        <button type="submit" name="user_input" value="9">Заполнение дополнительных соглашений на неполную рабочую
-            неделю
-        </button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="feature-title">Доп. соглашения</div>
+                <div class="feature-description">Создание дополнительных соглашений к договорам</div>
+                <button class="action-button" onclick="handleAction(8)">Создать соглашения</button>
+            </div>
 
-        <div class="description">Запись дополнительного соглашения по состоянию здоровья</div>
-        <button type="submit" name="user_input" value="10">Заполнение дополнительных соглашений по состоянию здоровья
-        </button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <div class="feature-title">Неполная занятость</div>
+                <div class="feature-description">Формирование соглашений о неполном рабочем дне</div>
+                <button class="action-button" onclick="handleAction(9)">Создать соглашение</button>
+            </div>
 
-        <div class="description">Закрытие программы.</div>
-        <button type="submit" name="user_input" value="6">Выход</button>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="feature-title">Медицинские соглашения</div>
+                <div class="feature-description">Создание соглашений по состоянию здоровья</div>
+                <button class="action-button" onclick="handleAction(10)">Создать документ</button>
+            </div>
 
-    </form>
-</fieldset>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-power-off"></i></div>
+                <div class="feature-title">Выход</div>
+                <div class="feature-description">Безопасное завершение работы приложения</div>
+                <button class="action-button" onclick="handleAction(6)">Выйти</button>
+            </div>
+        </div>
+
+        <footer>
+            © 2024 Программа для автоматизации задач предприятия. Все права защищены.
+        </footer>
+    </div>
+
+    <script>
+        function handleAction(actionId) {
+            // Логика обработки действий
+            console.log(`Действие ${actionId} выполнено`);
+            // Пример отправки формы:
+            // document.forms[0].user_input.value = actionId;
+            // document.forms[0].submit();
+        }
+    </script>
 </body>
 </html>
