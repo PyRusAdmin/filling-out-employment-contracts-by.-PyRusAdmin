@@ -5,13 +5,13 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
-from database import import_excel_to_db, read_from_db, clear_database
-from employment_contracts.additional_agreement import creation_contracts_additional_agreement
-from employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
-from employment_contracts.filling_data import creation_contracts, format_date
-from employment_contracts.filling_plant_downtime import creation_contracts_downtime
-from get import Employee
-from parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
+from src.database import import_excel_to_db, read_from_db, clear_database
+from src.employment_contracts.additional_agreement import creation_contracts_additional_agreement
+from src.employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
+from src.employment_contracts.filling_data import creation_contracts, format_date
+from src.employment_contracts.filling_plant_downtime import creation_contracts_downtime
+from src.get import Employee
+from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")

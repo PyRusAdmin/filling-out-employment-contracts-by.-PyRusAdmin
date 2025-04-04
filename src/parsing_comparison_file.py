@@ -8,12 +8,12 @@ from loguru import logger
 from openpyxl import load_workbook
 
 table_name = "parsing"  # Имя таблицы в базе данных
-file_database = "data.db"  # Имя файла базы данных
+file_database = "../data/data.db"  # Имя файла базы данных
 
 
 async def opening_the_database():
     """Открытие базы данных"""
-    conn = sqlite3.connect("data.db")  # Создаем соединение с базой данных
+    conn = sqlite3.connect("../data/data.db")  # Создаем соединение с базой данных
     cursor = conn.cursor()
     return conn, cursor
 

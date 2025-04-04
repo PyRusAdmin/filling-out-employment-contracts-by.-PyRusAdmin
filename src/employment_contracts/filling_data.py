@@ -26,7 +26,7 @@ async def format_date(date):
 
 
 async def open_list_gup():
-    file = "../list_gup/Списочный_состав.xlsx"
+    file = "../../data/list_gup/Списочный_состав.xlsx"
     wb = op.load_workbook(file)  # открываем файл
     ws = wb.active  # открываем активную таблицу
     list_gup = []  # создаем список

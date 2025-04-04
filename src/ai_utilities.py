@@ -19,7 +19,7 @@ async def gigachat(employee_name):
 
 async def open_list_gup_docx():
     """Открываем документ с шаблоном"""
-    wb = op.load_workbook("list_gup/Списочный_состав.xlsx")  # открываем файл
+    wb = op.load_workbook("../data/list_gup/Списочный_состав.xlsx")  # открываем файл
     sheet = wb.active  # открываем активную таблицу
     current_row = 6  # Начальная строка   1077
     for row in sheet.iter_rows(min_row=6, max_row=1077, values_only=True):
