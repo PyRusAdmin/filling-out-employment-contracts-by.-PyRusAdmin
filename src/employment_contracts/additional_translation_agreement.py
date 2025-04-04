@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
 from docxtpl import DocxTemplate
 from loguru import logger
 
-from src.database import read_from_db
-from src.employment_contracts.filling_data import format_date
-
-# Дополнительное соглашение для увольнения
-additional_agreement_list = [
-    23173
+# Табельные номера, для перевода на другую работу
+transfer_to_another_job = [
+    10711, 23495,
 ]
 
 
-async def record_data_salary_additional_agreement(row, formatted_date, ending, file_dog):
+async def record_data_another_job(row, formatted_date, ending, file_dog):
     """Заполнение дополнительных соглашений на не полную рабочую неделю"""
+
     doc = DocxTemplate(file_dog)
     date = row.a30  # дата трудового договора
+
     # Проверяем, что дата не None и содержит три элемента после разделения
     if date is None or len(date.split(".")) != 3:
         return
-    day, month, year = date.split(".")  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
+
+    day, month, year = date.split(
+        "."
+    )  # Разделение даты, если в Excell файле стоит формат ячейки дата, то будет вызываться ошибка программы
 
     context = {
         "name_surname": f" {row.a5} ",  # Ф.И.О. (Иванов Иван Иванович)
@@ -46,38 +46,22 @@ async def record_data_salary_additional_agreement(row, formatted_date, ending, f
         "year": f"{year}",  # Год
         "graduation_from_profession": f" {row.a28} ",  # Профессия в родительном падеже
     }
+
     doc.render(context)
-    doc.save(f"outgoing/доп_согл_нпн/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
+    doc.save(f"data/outgoing/Готовые_дополнительные_соглашения_перевод_на_другую_работу/{row.a0}_{row.a4_табельный_номер}_{row.a5}.docx")
 
 
-async def creation_contracts_additional_agreement(row, formatted_date, ending):
+async def creation_contracts_another_job(row, formatted_date, ending):
     try:
         # Проверяем, входит ли табельный номер в список
-        if int(row.a4_табельный_номер) in additional_agreement_list:
-            await record_data_salary_additional_agreement(
+        if int(row.a4_табельный_номер) in transfer_to_another_job:
+            await record_data_another_job(
                 row,
                 formatted_date,
                 ending,
-                "templates_contracts/договоры_компенсации/расторжение_ЗД.docx",
+                "data/templates_contracts/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_перевод.docx",
             )
         else:
             logger.info(f"Табельный номер {row.a4_табельный_номер} не входит в список. Договор не будет сформирован.")
     except Exception as e:
         logger.exception(f"Ошибка при формировании договора для табельного номера {row.a4_табельный_номер}: {e}")
-
-async def filling_ditional_agreement_health_reasons():
-    """Заполнение дополнительного соглашения по состоянию здоровья"""
-    start = datetime.now()
-    logger.info(f"Время старта: {start}")
-    data = await read_from_db()
-    for row in data:
-        logger.info(row)
-        ending = "ый" if row.a11 == "Мужчина" else "ая"
-        await creation_contracts_additional_agreement(row, await format_date(row.a7), ending)
-    finish = datetime.now()
-    logger.info(f"Время окончания: {finish}")
-    logger.info(f"Время работы: {finish - start}")
-
-
-if __name__ == "__main__":
-    filling_ditional_agreement_health_reasons()

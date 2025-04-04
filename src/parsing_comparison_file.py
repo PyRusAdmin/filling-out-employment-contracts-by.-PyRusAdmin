@@ -8,12 +8,12 @@ from loguru import logger
 from openpyxl import load_workbook
 
 table_name = "parsing"  # Имя таблицы в базе данных
-file_database = "../data/data.db"  # Имя файла базы данных
+file_database = "data/data.db"  # Имя файла базы данных
 
 
 async def opening_the_database():
     """Открытие базы данных"""
-    conn = sqlite3.connect("../data/data.db")  # Создаем соединение с базой данных
+    conn = sqlite3.connect("data/data.db")  # Создаем соединение с базой данных
     cursor = conn.cursor()
     return conn, cursor
 
@@ -87,14 +87,9 @@ async def parsing_document_1(min_row, max_row, column, column_1) -> None:
         existing_row = cursor.fetchone()
         # Если запись с таким табельным номером не существует, вставляем данные в базу данных
         if existing_row is None:
-            cursor.execute(
-                f"INSERT INTO {table_name} VALUES (?, ?)",
-                (table_column_1, table_column_2),
-            )
+            cursor.execute(f"INSERT INTO {table_name} VALUES (?, ?)",(table_column_1, table_column_2),)
     # Удаляем повторы по табельному номеру
-    cursor.execute(
-        f"DELETE FROM {table_name} WHERE rowid NOT IN (SELECT min(rowid) FROM {table_name} GROUP BY table_column_1, table_column_2)"
-    )
+    cursor.execute(f"DELETE FROM {table_name} WHERE rowid NOT IN (SELECT min(rowid) FROM {table_name} GROUP BY table_column_1, table_column_2)")
     # Сохраняем изменения в базе данных и закрываем соединение
     conn.commit()
     conn.close()

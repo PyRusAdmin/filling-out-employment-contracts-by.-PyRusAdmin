@@ -1,12 +1,14 @@
 from datetime import datetime
 
+import uvicorn
 from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
 from src.database import import_excel_to_db, read_from_db, clear_database
-from src.employment_contracts.additional_agreement import creation_contracts_additional_agreement
+from src.employment_contracts.additional_agreement import filling_ditional_agreement_health_reasons
+from src.employment_contracts.additional_translation_agreement import creation_contracts_another_job
 from src.employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
 from src.employment_contracts.filling_data import creation_contracts, format_date
 from src.employment_contracts.filling_plant_downtime import creation_contracts_downtime
@@ -107,8 +109,7 @@ async def action(request: Request, user_input: str = Form(...)):
                 ending = "ый" if row.a11 == "Мужчина" else "ая"
                 await creation_contracts(row, await format_date(row.a7), ending)
             finish = datetime.now()
-            logger.info(f"Время окончания: {finish}")
-            logger.info(f"Время работы: {finish - start}")
+            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
         elif user_input == 3:
             await compare_and_rewrite_professions()
         elif user_input == 4:
@@ -117,7 +118,7 @@ async def action(request: Request, user_input: str = Form(...)):
             return RedirectResponse(url="/get_contract", status_code=303)
         elif user_input == 6:  # Добавьте обработчик для выхода
             return RedirectResponse(url="/", status_code=303)
-        elif user_input == 7:
+        elif user_input == 7: # Очистка базы данных
             try:
                 await clear_database()
                 logger.info("База данных успешно очищена.")
@@ -136,9 +137,8 @@ async def action(request: Request, user_input: str = Form(...)):
                 ending = "ый" if row.a11 == "Мужчина" else "ая"
                 await creation_contracts_downtime(row, await format_date(row.a7), ending)
             finish = datetime.now()
-            logger.info(f"Время окончания: {finish}")
-            logger.info(f"Время работы: {finish - start}")
-        elif user_input == 9:
+            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+        elif user_input == 9:  # Заполнение договоров на не полную рабочую неделю
             start = datetime.now()
             logger.info(f"Время старта: {start}")
             data = await read_from_db()
@@ -147,22 +147,19 @@ async def action(request: Request, user_input: str = Form(...)):
                 ending = "ый" if row.a11 == "Мужчина" else "ая"
                 await creation_contracts_downtime_week(row, await format_date(row.a7), ending)
             finish = datetime.now()
-            logger.info(f"Время окончания: {finish}")
-            logger.info(f"Время работы: {finish - start}")
-        elif user_input == 10:
+            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+        elif user_input == 10:  # Дополнительное соглашение по состоянию здоровья
+            await filling_ditional_agreement_health_reasons()
+        elif user_input == 11:  # Дополнительное соглашение на перевод на другую должность (профессию)
             start = datetime.now()
             logger.info(f"Время старта: {start}")
             data = await read_from_db()
             for row in data:
                 logger.info(row)
                 ending = "ый" if row.a11 == "Мужчина" else "ая"
-                await creation_contracts_additional_agreement(row, await format_date(row.a7), ending)
+                await creation_contracts_another_job(row, await format_date(row.a7), ending)
             finish = datetime.now()
-            logger.info(f"Время окончания: {finish}")
-            logger.info(f"Время работы: {finish - start}")
-        elif user_input == 11:
-            # Добавьте логику для создания соглашений о переводе
-            print("Обработка actionId=11")
+            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
         logger.exception(e)
@@ -170,6 +167,4 @@ async def action(request: Request, user_input: str = Form(...)):
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

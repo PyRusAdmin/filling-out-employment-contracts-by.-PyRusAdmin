@@ -4,7 +4,7 @@ from loguru import logger
 from peewee import *
 
 # Настройка базы данных через Peewee
-db = SqliteDatabase("contracts.db")
+db = SqliteDatabase("data/contracts.db")
 
 
 class Employee(Model):
@@ -50,7 +50,7 @@ class Employee(Model):
 
 # Функция для импорта данных из Excel в базу данных
 async def import_excel_to_db(min_row, max_row):
-    file = "../data/list_gup/Списочный_состав.xlsx"
+    file = "data/list_gup/Списочный_состав.xlsx"
     wb = op.load_workbook(file)
     ws = wb.active
 
@@ -101,5 +101,4 @@ async def clear_database():
 
 
 if __name__ == "__main__":
-    import_excel_to_db()
     clear_database()  # Очистка базы данных
