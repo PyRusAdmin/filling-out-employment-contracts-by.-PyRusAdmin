@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import uvicorn
-from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi import FastAPI
+from fastapi import Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
@@ -15,6 +17,8 @@ from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
 app = FastAPI()
+# Монтируем статические файлы из папки "static"
+app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
