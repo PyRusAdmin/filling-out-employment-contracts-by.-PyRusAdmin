@@ -112,96 +112,119 @@
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h1>Система автоматизации предприятия</h1>
-        </header>
+<div class="app-container">
+    <header>
+        <h1>Система автоматизации предприятия</h1>
+    </header>
 
-        <div class="grid-container">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-file-excel"></i></div>
-                <div class="feature-title">Извлечение данных из Excel</div>
-                <div class="feature-description">Эффективное извлечение и обработка данных из Excel-документов</div>
-                <button class="action-button" onclick="handleAction(1)">Обработать Excel</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
-                <div class="feature-title">Формирование договоров</div>
-                <div class="feature-description">Автоматизация создания трудовых договоров по шаблонам</div>
-                <button class="action-button" onclick="handleAction(2)">Создать договоры</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
-                <div class="feature-title">Сравнение данных</div>
-                <div class="feature-description">Сравнение наборов данных и экспорт результатов в Excel</div>
-                <button class="action-button" onclick="handleAction(3)">Сравнить данные</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-database"></i></div>
-                <div class="feature-title">Управление БД</div>
-                <div class="feature-description">Импорт/экспорт данных в центральную базу данных</div>
-                <button class="action-button" onclick="location.href='/import_excel_form'">Работа с БД</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
-                <div class="feature-title">Получение документов</div>
-                <div class="feature-description">Формирование и выгрузка трудовых договоров</div>
-                <button class="action-button" onclick="handleAction(5)">Получить договор</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-broom"></i></div>
-                <div class="feature-title">Очистка данных</div>
-                <div class="feature-description">Удаление устаревших записей из базы данных</div>
-                <button class="action-button" onclick="handleAction(7)">Очистить БД</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
-                <div class="feature-title">Доп. соглашения</div>
-                <div class="feature-description">Создание дополнительных соглашений к договорам</div>
-                <button class="action-button" onclick="handleAction(8)">Создать соглашения</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-clock"></i></div>
-                <div class="feature-title">Неполная занятость</div>
-                <div class="feature-description">Формирование соглашений о неполном рабочем дне</div>
-                <button class="action-button" onclick="handleAction(9)">Создать соглашение</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-heartbeat"></i></div>
-                <div class="feature-title">Медицинские соглашения</div>
-                <div class="feature-description">Создание соглашений по состоянию здоровья</div>
-                <button class="action-button" onclick="handleAction(10)">Создать документ</button>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-power-off"></i></div>
-                <div class="feature-title">Выход</div>
-                <div class="feature-description">Безопасное завершение работы приложения</div>
-                <button class="action-button" onclick="handleAction(6)">Выйти</button>
-            </div>
+    <div class="grid-container">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-excel"></i></div>
+            <div class="feature-title">Извлечение данных из Excel</div>
+            <div class="feature-description">Эффективное извлечение и обработка данных из Excel-документов</div>
+            <button class="action-button" onclick="handleAction(1)">Обработать Excel</button>
         </div>
 
-        <footer>
-            © 2024 Программа для автоматизации задач предприятия. Все права защищены.
-        </footer>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
+            <div class="feature-title">Формирование договоров</div>
+            <div class="feature-description">Автоматизация создания трудовых договоров по шаблонам</div>
+            <button class="action-button" onclick="handleAction(2)">Создать договоры</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+            <div class="feature-title">Сравнение данных</div>
+            <div class="feature-description">Сравнение наборов данных и экспорт результатов в Excel</div>
+            <button class="action-button" onclick="handleAction(3)">Сравнить данные</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-database"></i></div>
+            <div class="feature-title">Управление БД</div>
+            <div class="feature-description">Импорт/экспорт данных в центральную базу данных</div>
+            <button class="action-button" onclick="location.href='/import_excel_form'">Работа с БД</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+            <div class="feature-title">Получение документов</div>
+            <div class="feature-description">Формирование и выгрузка трудовых договоров</div>
+            <button class="action-button" onclick="handleAction(5)">Получить договор</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-broom"></i></div>
+            <div class="feature-title">Очистка данных</div>
+            <div class="feature-description">Удаление устаревших записей из базы данных</div>
+            <button class="action-button" onclick="handleAction(7)">Очистить БД</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="feature-title">Доп. соглашения</div>
+            <div class="feature-description">Создание дополнительных соглашений к договорам</div>
+            <button class="action-button" onclick="handleAction(8)">Создать соглашения</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-clock"></i></div>
+            <div class="feature-title">Неполная занятость</div>
+            <div class="feature-description">Формирование соглашений о неполном рабочем дне</div>
+            <button class="action-button" onclick="handleAction(9)">Создать соглашение</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-heartbeat"></i></div>
+            <div class="feature-title">Медицинские соглашения</div>
+            <div class="feature-description">Создание соглашений по состоянию здоровья</div>
+            <button class="action-button" onclick="handleAction(10)">Создать документ</button>
+        </div>
+
+        <!--Дополнительное соглашение перевод на другую работу-->
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+            <div class="feature-title">Доп. соглашения</div>
+            <div class="feature-description">Перевод на другую работу</div>
+            <button class="action-button" onclick="handleAction(11)">Получить договор</button>
+        </div>
+
+        <!--Закрыть программу-->
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-power-off"></i></div>
+            <div class="feature-title">Выход</div>
+            <div class="feature-description">Безопасное завершение работы приложения</div>
+            <button class="action-button" onclick="handleAction(6)">Выйти</button>
+        </div>
     </div>
 
-    <script>
-        function handleAction(actionId) {
-            // Логика обработки действий
-            console.log(`Действие ${actionId} выполнено`);
-            // Пример отправки формы:
-            // document.forms[0].user_input.value = actionId;
-            // document.forms[0].submit();
+    <footer>
+        © 2024 Программа для автоматизации задач предприятия. Все права защищены.
+    </footer>
+</div>
+
+<script>
+    async function handleAction(actionId) {
+        try {
+            const response = await fetch('/action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_input=${actionId}`,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка: ${response.status}`);
+            }
+
+            // После успешного выполнения можно перенаправить или показать сообщение
+            window.location.href = '/'; // Перезагрузка страницы после действия
+        } catch (error) {
+            console.error('Ошибка при выполнении действия:', error);
+            alert('Произошла ошибка при выполнении действия!');
         }
-    </script>
+    }
+</script>
 </body>
 </html>

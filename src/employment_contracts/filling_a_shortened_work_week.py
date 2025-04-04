@@ -61,7 +61,7 @@ async def creation_contracts_downtime_week(row, formatted_date, ending):
                 row,
                 formatted_date,
                 ending,
-                "templates_contracts/Шаблоны_дополнительных_соглашений/доп_соглашение_к_трудовому_договору_неполное_раб_время.docx",
+                "templates_contracts/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_неп_раб_время.docx",
             )
         else:
             logger.info(f"Табельный номер {row.a4_табельный_номер} не входит в список. Договор не будет сформирован.")
