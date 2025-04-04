@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
 import uvicorn
 from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
-from src.database import import_excel_to_db, read_from_db, clear_database
-from src.employment_contracts.additional_agreement import filling_ditional_agreement_health_reasons
-from src.employment_contracts.additional_translation_agreement import creation_contracts_another_job
-from src.employment_contracts.filling_a_shortened_work_week import creation_contracts_downtime_week
-from src.employment_contracts.filling_data import creation_contracts, format_date
-from src.employment_contracts.filling_plant_downtime import creation_contracts_downtime
+from src.database import import_excel_to_db, database_cleaning_function
+from src.filling_data import (formation_employment_contracts_filling_data,
+                              formation_and_filling_of_employment_contracts_for_idle_time_enterprise,
+                              formation_and_filling_of_part_time_employment_contracts,
+                              formation_and_filling_of_employment_contracts_for_transfer_to_another_job,
+                              filling_ditional_agreement_health_reasons)
 from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
@@ -91,10 +89,12 @@ async def get_contract(request: Request, tab_number: str = Form(...), ):
             return {"message": f"Данные для табельного номера {tab_number} не найдены."}
     raise HTTPException(status_code=400, detail="Табельный номер не указан.")
 
+
 @app.get("/formation_employment_contracts", response_class=HTMLResponse)
 async def formation_employment_contracts(request: Request):
     """Страница для формирования трудовых договоров"""
     return templates.TemplateResponse("formation_employment_contracts.html", {"request": request})
+
 
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
@@ -102,19 +102,11 @@ async def action(request: Request, user_input: str = Form(...)):
     logger.info(f"Выбранное действие: {user_input}")
     try:
         user_input = int(user_input)
-        if user_input == 1: # Парсинг данных из файла Excel
+        if user_input == 1:  # Парсинг данных из файла Excel
             await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
-        elif user_input == 2:
-            start = datetime.now()
-            logger.info(f"Время старта: {start}")
-            data = await read_from_db()
-            for row in data:
-                logger.info(row)
-                ending = "ый" if row.a11 == "Мужчина" else "ая"
-                await creation_contracts(row, await format_date(row.a7), ending)
-            finish = datetime.now()
-            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
-        elif user_input == 3: # Сравнение и перезапись значений профессии в файле Excel счет начинается с 0
+        elif user_input == 2:  # Формирование трудовых договоров
+            await formation_employment_contracts_filling_data()
+        elif user_input == 3:  # Сравнение и перезапись значений профессии в файле Excel счет начинается с 0
             await compare_and_rewrite_professions()
         elif user_input == 4:
             return RedirectResponse(url="/import_excel_form", status_code=303)
@@ -122,49 +114,16 @@ async def action(request: Request, user_input: str = Form(...)):
             return RedirectResponse(url="/get_contract", status_code=303)
         elif user_input == 6:  # Добавьте обработчик для выхода
             return RedirectResponse(url="/", status_code=303)
-        elif user_input == 7: # Очистка базы данных
-            try:
-                await clear_database()
-                logger.info("База данных успешно очищена.")
-                return templates.TemplateResponse("database_cleanup.html",
-                                                  {"request": request, "message": "База данных успешно очищена!"})
-            except Exception as e:
-                logger.exception("Ошибка при очистке базы данных.")
-                return templates.TemplateResponse("database_cleanup.html",
-                                                  {"request": request, "message": f"Ошибка: {e}"})
-        elif user_input == 8: # Заполнение договоров на простой
-            start = datetime.now()
-            logger.info(f"Время старта: {start}")
-            data = await read_from_db()
-            for row in data:
-                logger.info(row)
-                ending = "ый" if row.a11 == "Мужчина" else "ая"
-                await creation_contracts_downtime(row, await format_date(row.a7), ending)
-            finish = datetime.now()
-            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+        elif user_input == 7:  # Очистка базы данных
+            await database_cleaning_function(templates, request)
+        elif user_input == 8:  # Заполнение договоров на простой
+            await formation_and_filling_of_employment_contracts_for_idle_time_enterprise()
         elif user_input == 9:  # Заполнение договоров на не полную рабочую неделю
-            start = datetime.now()
-            logger.info(f"Время старта: {start}")
-            data = await read_from_db()
-            for row in data:
-                logger.info(row)
-                ending = "ый" if row.a11 == "Мужчина" else "ая"
-                await creation_contracts_downtime_week(row, await format_date(row.a7), ending)
-            finish = datetime.now()
-            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+            await formation_and_filling_of_part_time_employment_contracts()
         elif user_input == 10:  # Дополнительное соглашение по состоянию здоровья
             await filling_ditional_agreement_health_reasons()
         elif user_input == 11:  # Дополнительное соглашение на перевод на другую должность (профессию)
-            start = datetime.now()
-            logger.info(f"Время старта: {start}")
-            data = await read_from_db()
-            for row in data:
-                logger.info(row)
-                ending = "ый" if row.a11 == "Мужчина" else "ая"
-                await creation_contracts_another_job(row, await format_date(row.a7), ending)
-            finish = datetime.now()
-            logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
-
+            await formation_and_filling_of_employment_contracts_for_transfer_to_another_job()
         elif user_input == 12:  # Переход для формирования трудовых договоров и дополнительных соглашений
             return RedirectResponse(url="/formation_employment_contracts", status_code=303)
 

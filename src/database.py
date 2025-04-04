@@ -3,6 +3,8 @@ import openpyxl as op
 from loguru import logger
 from peewee import *
 
+from src.get import Employee
+
 # Настройка базы данных через Peewee
 db = SqliteDatabase("data/contracts.db")
 
@@ -98,6 +100,19 @@ async def clear_database():
         logger.info(f"База данных очищена. Удалено записей: {deleted_count}")
     except Exception as e:
         logger.exception("Ошибка при очистке базы данных: ", e)
+
+
+async def database_cleaning_function(templates, request):
+    """Функция очистки базы данных"""
+    try:
+        await clear_database()
+        logger.info("База данных успешно очищена.")
+        return templates.TemplateResponse("database_cleanup.html",
+                                          {"request": request, "message": "База данных успешно очищена!"})
+    except Exception as e:
+        logger.exception("Ошибка при очистке базы данных.")
+        return templates.TemplateResponse("database_cleanup.html",
+                                          {"request": request, "message": f"Ошибка: {e}"})
 
 
 if __name__ == "__main__":
