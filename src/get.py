@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from peewee import *
 
 db = SqliteDatabase("contracts.db")  # Создайте модель для таблицы в базе данных
