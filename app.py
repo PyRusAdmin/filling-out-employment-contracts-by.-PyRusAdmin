@@ -48,8 +48,7 @@ async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
 def search_employee_by_tab_number(tab_number):
     """Ищем данные сотрудника по табельному номеру"""
     try:
-        customer = Employee.get(Employee.a4_табельный_номер == tab_number)
-        return customer
+        return Employee.get(Employee.a4_табельный_номер == tab_number)
     except Employee.DoesNotExist:
         return None
 
@@ -92,6 +91,10 @@ async def get_contract(request: Request, tab_number: str = Form(...), ):
             return {"message": f"Данные для табельного номера {tab_number} не найдены."}
     raise HTTPException(status_code=400, detail="Табельный номер не указан.")
 
+@app.get("/formation_employment_contracts", response_class=HTMLResponse)
+async def formation_employment_contracts(request: Request):
+    """Страница для формирования трудовых договоров"""
+    return templates.TemplateResponse("formation_employment_contracts.html", {"request": request})
 
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
@@ -99,7 +102,7 @@ async def action(request: Request, user_input: str = Form(...)):
     logger.info(f"Выбранное действие: {user_input}")
     try:
         user_input = int(user_input)
-        if user_input == 1:
+        if user_input == 1: # Парсинг данных из файла Excel
             await parsing_document_1(min_row=5, max_row=1084, column=5, column_1=8)
         elif user_input == 2:
             start = datetime.now()
@@ -111,7 +114,7 @@ async def action(request: Request, user_input: str = Form(...)):
                 await creation_contracts(row, await format_date(row.a7), ending)
             finish = datetime.now()
             logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
-        elif user_input == 3:
+        elif user_input == 3: # Сравнение и перезапись значений профессии в файле Excel счет начинается с 0
             await compare_and_rewrite_professions()
         elif user_input == 4:
             return RedirectResponse(url="/import_excel_form", status_code=303)
@@ -129,7 +132,7 @@ async def action(request: Request, user_input: str = Form(...)):
                 logger.exception("Ошибка при очистке базы данных.")
                 return templates.TemplateResponse("database_cleanup.html",
                                                   {"request": request, "message": f"Ошибка: {e}"})
-        elif user_input == 8:
+        elif user_input == 8: # Заполнение договоров на простой
             start = datetime.now()
             logger.info(f"Время старта: {start}")
             data = await read_from_db()
@@ -161,6 +164,10 @@ async def action(request: Request, user_input: str = Form(...)):
                 await creation_contracts_another_job(row, await format_date(row.a7), ending)
             finish = datetime.now()
             logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+
+        elif user_input == 12:  # Переход для формирования трудовых договоров и дополнительных соглашений
+            return RedirectResponse(url="/formation_employment_contracts", status_code=303)
+
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
         logger.exception(e)
