@@ -9,3 +9,4 @@ aiosqlite
 peewee
 uvicorn
 fastapi
+python-multipart
