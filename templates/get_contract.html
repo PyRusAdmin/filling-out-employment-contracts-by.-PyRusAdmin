@@ -1,105 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Получение трудового договора</title>
-    <style>
-        /* Центрирование контента и использование всей высоты */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Заполнение всей высоты окна */
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        /* Форматирование формы для использования всего экрана */
-        form {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        fieldset {
-            border: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        /* Заголовок формы */
-        legend {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* Визуальные стили для input */
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0 20px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        /* Стили для кнопок */
-        button {
-            width: 100%;
-            padding: 15px;
-            border-radius: 30em;
-            font-size: 16px;
-            font-family: inherit;
-            border: none;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-            transition: .5s ease;
-            background-color: #0fd850;
-            color: white;
-        }
-
-        button::before {
-            content: '';
-            width: 0;
-            height: 100%;
-            border-radius: 30em;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
-            transition: .5s ease;
-            display: block;
-            z-index: -1;
-        }
-
-        button:hover::before {
-            width: 100%;
-        }
-
-        /* Стили для второй кнопки */
-        button.secondary {
-            background-color: #f9f047;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-<form action="/get_contract" method="POST">
-    <fieldset>
-        <legend>Получение данных трудового договора</legend>
-        <label for="tab_number">Табельный номер (от 4 до 8 знаков):</label>
-        <input type="text" id="tab_number" name="tab_number" required minlength="4" maxlength="8" size="10"/><br><br>
-        <button type="submit">Получить договор</button>
-        <br><br>
-        <button type="submit" class="secondary">На главную страницу</button>
-    </fieldset>
-</form>
+<div class="app-container">
+    <header>
+        <h1>Система автоматизации предприятия</h1>
+    </header>
+    <div class="grid-container">
+        <div class="feature-card">
+            <form action="/get_contract" method="POST">
+                <fieldset>
+                    <legend>Получение договора</legend>
+                    <div class="form-group">
+                        <label for="tab_number">Табельный номер (4-8 символов):</label>
+                        <input type="text" id="tab_number" name="tab_number" required minlength="4" maxlength="8"
+                               size="10">
+                    </div>
+                    <div class="buttons-container primary">
+                        <button type="submit" class="action-button primary">Получить договор</button>
+                    </div>
+                    <div class="buttons-container secondary">
+                        <button onclick="window.location.href='/'" class="action-button secondary">На главную страницу</button>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <footer>
+        © 2024 Программа для автоматизации задач предприятия. Все права защищены.
+    </footer>
+</div>
 </body>
 </html>
