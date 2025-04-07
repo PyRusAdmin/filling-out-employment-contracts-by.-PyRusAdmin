@@ -95,7 +95,7 @@ async def creation_contracts_downtime_week(row, formatted_date, ending):
 
 
 # Табельные номера, для перевода на другую работу
-transfer_to_another_job = [10711, 23495, ]
+transfer_to_another_job = [10711, 23495, 15675]
 
 
 async def creation_contracts_another_job(row, formatted_date, ending):
