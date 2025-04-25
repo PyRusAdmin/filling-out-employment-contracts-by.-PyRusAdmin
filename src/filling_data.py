@@ -50,6 +50,29 @@ async def generate_documents(row, formatted_date, ending, file_dog, output_path)
     doc.save(full_path)  # Сохранение документа
 
 
+# Заполнение уведомлений
+async def filling_notifications():
+    """Заполнение уведомлений"""
+    start = datetime.now()
+    logger.info(f"Время старта: {start}")
+    data = await read_from_db()
+    for row in data:
+        logger.info(row)
+        ending = "ый" if row.a11 == "Мужчина" else "ая"
+        # await creation_contracts(row, await format_date(row.a7), ending)
+
+        await generate_documents(
+            row=row,
+            formatted_date=await format_date(row.a7),
+            ending=ending,
+            file_dog="data/templates_contracts/уведомления/уведомление.docx",
+            output_path="data/outgoing/Готовые_уведомления"
+        )
+
+    finish = datetime.now()
+    logger.info(f"Время окончания: {finish}\n\nВремя работы: {finish - start}")
+
+
 # на простой
 not_a_full_work_weeks = [7123, 856, 1268, 1188, 5429, 23511, 4211, 3307, 10851, 10800, 3639, 11073, 8065, 13103,
                          13533, 7006, 7687, 15293, 17503, 17553, 12608, 600036, 12537, ]
@@ -148,10 +171,6 @@ async def filling_ditional_agreement_health_reasons():
     finish = datetime.now()
     logger.info(f"Время окончания: {finish}")
     logger.info(f"Время работы: {finish - start}")
-
-
-if __name__ == "__main__":
-    filling_ditional_agreement_health_reasons()
 
 
 async def formation_and_filling_of_employment_contracts_for_transfer_to_another_job():
@@ -402,5 +421,3 @@ async def creation_contracts(row, formatted_date, ending):
         logger.exception(e)
 
 
-if __name__ == "__main__":
-    open_list_gup()
