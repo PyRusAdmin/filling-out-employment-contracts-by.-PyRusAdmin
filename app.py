@@ -47,6 +47,7 @@ async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
         raise HTTPException(status_code=500, detail="Произошла ошибка при импорте данных.")
 
 
+
 def search_employee_by_tab_number(tab_number):
     """Ищем данные сотрудника по табельному номеру"""
     try:

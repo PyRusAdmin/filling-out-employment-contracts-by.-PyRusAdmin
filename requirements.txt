@@ -3,8 +3,6 @@ openpyxl
 configparser
 gigachat
 loguru
-flask
-Quart
 aiosqlite
 peewee
 uvicorn
