@@ -13,6 +13,7 @@ from src.filling_data import (formation_employment_contracts_filling_data,
                               formation_and_filling_of_part_time_employment_contracts,
                               formation_and_filling_of_employment_contracts_for_transfer_to_another_job,
                               filling_ditional_agreement_health_reasons, filling_notifications)
+from src.formation_reduction_notification import formation_reduction_notification
 from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
 
@@ -45,7 +46,6 @@ async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
     except Exception as e:
         logger.exception("Ошибка при импорте данных.")
         raise HTTPException(status_code=500, detail="Произошла ошибка при импорте данных.")
-
 
 
 def search_employee_by_tab_number(tab_number):
@@ -129,10 +129,16 @@ async def action(request: Request, user_input: str = Form(...)):
             await filling_ditional_agreement_health_reasons()
         elif user_input == 11:  # Дополнительное соглашение на перевод на другую должность (профессию)
             await formation_and_filling_of_employment_contracts_for_transfer_to_another_job()
+
         elif user_input == 12:  # Переход для формирования трудовых договоров и дополнительных соглашений
             return RedirectResponse(url="/formation_employment_contracts", status_code=303)
+
         elif user_input == 13:  # Переход для парсинга данных из файла
-            await filling_notifications() # Заполнение уведомлений для сотрудников
+            await filling_notifications()  # Заполнение уведомлений для сотрудников
+
+
+        elif user_input == 15:  # Формирование уведомление о сокращении
+            await formation_reduction_notification()
 
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
