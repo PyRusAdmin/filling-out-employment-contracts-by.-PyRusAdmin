@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+import os
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi import Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
+from src.checking_availability import get_missing_ids
 from src.database import import_excel_to_db, database_cleaning_function
 from src.filling_data import (formation_employment_contracts_filling_data,
                               formation_and_filling_of_employment_contracts_for_idle_time_enterprise,
@@ -28,6 +32,24 @@ progress_messages = []  # список сообщений, которые буд
 async def index(request: Request):
     """Главная страница"""
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+# @app.get("/check_notifications")
+# async def check_notifications():
+#     missing_ids = await get_missing_ids()
+#     return JSONResponse({
+#         "status": "ok",
+#         "missing_count": len(missing_ids),
+#         "missing_ids": missing_ids,
+#         "download_url": "/download_missing" if missing_ids else None
+#     })
+
+
+@app.get("/download_missing")
+async def download_missing():
+    if os.path.exists("missing.txt"):
+        return FileResponse("missing.txt", filename="missing.txt", media_type="text/plain")
+    return JSONResponse({"error": "missing.txt not found"}, status_code=404)
 
 
 @app.get("/import_excel_form", response_class=HTMLResponse)
@@ -140,8 +162,8 @@ async def action(request: Request, user_input: str = Form(...)):
         elif user_input == 15:  # Формирование уведомление о сокращении
             await formation_reduction_notification()
 
-        elif user_input == 16:  # Заполнение базы данных
-            pass
+        elif user_input == 17:  # Сверка уведомлений
+            await get_missing_ids()
 
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:

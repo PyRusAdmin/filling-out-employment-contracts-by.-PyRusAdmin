@@ -70,7 +70,16 @@
             <button class="action-button" onclick="handleAction(13)">Перейти</button>
         </div>
 
-        <!--Закрыть программу-->
+        <!-- Сверка уведомлений с JSON -->
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-excel"></i></div>
+            <div class="feature-title">Сверка уведомлений</div>
+            <div class="feature-description">Удаление лишних файлов и создание missing.txt</div>
+            <button class="action-button" onclick="handleAction(17)">Запустить</button>
+        </div>
+
+
+        <!-- Закрыть программу -->
         <div class="feature-card">
             <div class="feature-icon"><i class="fas fa-power-off"></i></div>
             <div class="feature-title">Выход</div>
@@ -84,6 +93,42 @@
         © 2024 Программа для автоматизации задач предприятия. Все права защищены.
     </footer>
 </div>
+
+<script>
+async function handleAction(action) {
+    if (action === 17) {
+        try {
+            const formData = new FormData();
+            formData.append("user_input", "17");
+
+            const response = await fetch("/action", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (Number(result.missing_count) > 0) {
+                alert(`⚠️ Найдено ${result.missing_count} отсутствующих уведомлений!`);
+
+                if (result.download_url) {
+                    const link = document.createElement("a");
+                    link.href = result.download_url;
+                    link.download = "missing.txt";
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                }
+            } else {
+                alert("🎉 Все уведомления на месте!");
+            }
+        } catch (err) {
+            alert("❌ Ошибка при проверке уведомлений");
+            console.error(err);
+        }
+    }
+}
+</script>
 
 <script src="/static/script.js"></script> <!-- Скрипт для обработки действий -->
 </body>
