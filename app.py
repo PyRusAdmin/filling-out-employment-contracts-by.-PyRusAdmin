@@ -140,6 +140,9 @@ async def action(request: Request, user_input: str = Form(...)):
         elif user_input == 15:  # Формирование уведомление о сокращении
             await formation_reduction_notification()
 
+        elif user_input == 16:  # Заполнение базы данных
+            pass
+
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
         logger.exception(e)

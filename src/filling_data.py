@@ -12,11 +12,14 @@ async def generate_documents(row, formatted_date, ending, file_dog, output_path)
     doc = DocxTemplate(file_dog)  # Загрузка шаблона
     # Получение и проверка даты трудового договора
     date = row.a30  # дата трудового договора
+
     # Проверяем, что дата не None и содержит три элемента после разделения
     if date is None or len(date.split(".")) != 3:
-        return
+        day, month, year = "--", "--", "----"
+    else:
+        day, month, year = date.split(".")
 
-    day, month, year = date.split(".")  # Разделение даты на компоненты
+    # day, month, year = date.split(".")  # Разделение даты на компоненты
     context = {
         "name_surname": f" {row.a5} ",  # Ф.И.О. (Иванов Иван Иванович)
         "name_surname_completely": f" {row.a6} ",  # Ф.И.О. (Иванов И. И.)
@@ -246,6 +249,7 @@ async def open_list_gup():
 
 async def formation_employment_contracts_filling_data():
     """Формирование трудовых договоров"""
+
     start = datetime.now()
     logger.info(f"Время старта: {start}")
     data = await read_from_db()

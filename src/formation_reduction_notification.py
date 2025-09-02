@@ -17,7 +17,6 @@ async def formation_reduction_notification():
     for row in data:
         logger.info(row)
         ending = "ый" if row.a11 == "Мужчина" else "ая"
-        # await creation_contracts(row, await format_date(row.a7), ending)
 
         await generate_documents(
             row=row,
