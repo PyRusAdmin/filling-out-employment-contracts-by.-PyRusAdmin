@@ -77,13 +77,15 @@ async def parsing_document_1(min_row, max_row, column, column_1) -> None:
         table_column_1 = str(row[int(column)])  # Преобразуем значение в строку
         table_column_2 = str(row[int(column_1)])  # Преобразуем значение в строку
         # Проверяем, существует ли запись с таким табельным номером в базе данных
-        cursor.execute(f"SELECT * FROM {table_name} WHERE table_column_1 = ? AND table_column_2 = ?", (table_column_1, table_column_2),)
+        cursor.execute(f"SELECT * FROM {table_name} WHERE table_column_1 = ? AND table_column_2 = ?",
+                       (table_column_1, table_column_2), )
         existing_row = cursor.fetchone()
         # Если запись с таким табельным номером не существует, вставляем данные в базу данных
         if existing_row is None:
             cursor.execute(f"INSERT INTO {table_name} VALUES (?, ?)", (table_column_1, table_column_2), )
     # Удаляем повторы по табельному номеру
-    cursor.execute(f"DELETE FROM {table_name} WHERE rowid NOT IN (SELECT min(rowid) FROM {table_name} GROUP BY table_column_1, table_column_2)")
+    cursor.execute(
+        f"DELETE FROM {table_name} WHERE rowid NOT IN (SELECT min(rowid) FROM {table_name} GROUP BY table_column_1, table_column_2)")
     # Сохраняем изменения в базе данных и закрываем соединение
     conn.commit()
     conn.close()

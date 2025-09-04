@@ -22,8 +22,8 @@ async def formation_reduction_notification():
             row=row,
             formatted_date=await format_date(row.a7),
             ending=ending,
-            file_dog="data/templates_contracts/Сокращение/уведомления.docx", # шаблон уведомления
-            output_path="data/outgoing/Готовые_уведомления_сокращение" # папка для сохранения уведомления
+            file_dog="data/templates_contracts/Сокращение/уведомления.docx",  # шаблон уведомления
+            output_path="data/outgoing/Готовые_уведомления_сокращение"  # папка для сохранения уведомления
         )
 
     finish = datetime.now()

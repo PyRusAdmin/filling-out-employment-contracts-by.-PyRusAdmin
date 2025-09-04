@@ -34,17 +34,6 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-# @app.get("/check_notifications")
-# async def check_notifications():
-#     missing_ids = await get_missing_ids()
-#     return JSONResponse({
-#         "status": "ok",
-#         "missing_count": len(missing_ids),
-#         "missing_ids": missing_ids,
-#         "download_url": "/download_missing" if missing_ids else None
-#     })
-
-
 @app.get("/download_missing")
 async def download_missing():
     if os.path.exists("missing.txt"):

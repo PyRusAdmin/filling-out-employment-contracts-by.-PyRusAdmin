@@ -423,5 +423,3 @@ async def creation_contracts(row, formatted_date, ending):
 
     except Exception as e:
         logger.exception(e)
-
-
