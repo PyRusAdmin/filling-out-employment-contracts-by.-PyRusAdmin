@@ -94,41 +94,6 @@
     </footer>
 </div>
 
-<script>
-async function handleAction(action) {
-    if (action === 17) {
-        try {
-            const formData = new FormData();
-            formData.append("user_input", "17");
-
-            const response = await fetch("/action", {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (Number(result.missing_count) > 0) {
-                alert(`⚠️ Найдено ${result.missing_count} отсутствующих уведомлений!`);
-
-                if (result.download_url) {
-                    const link = document.createElement("a");
-                    link.href = result.download_url;
-                    link.download = "missing.txt";
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                }
-            } else {
-                alert("🎉 Все уведомления на месте!");
-            }
-        } catch (err) {
-            alert("❌ Ошибка при проверке уведомлений");
-            console.error(err);
-        }
-    }
-}
-</script>
 
 <script src="/static/script.js"></script> <!-- Скрипт для обработки действий -->
 </body>
