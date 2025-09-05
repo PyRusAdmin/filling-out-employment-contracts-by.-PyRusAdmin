@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
+from src.address_parsing import address_parsing
 from src.checking_availability import get_missing_ids
 from src.database import import_excel_to_db, database_cleaning_function
 from src.filling_data import (formation_employment_contracts_filling_data,
@@ -24,6 +25,10 @@ from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_
 app = FastAPI()
 # Монтируем статические файлы из папки "static"
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Монтируем папку data
+app.mount("/data", StaticFiles(directory="data"), name="data")
+
 templates = Jinja2Templates(directory="templates")
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
@@ -43,8 +48,13 @@ async def download_missing():
 
 @app.get("/import_excel_form", response_class=HTMLResponse)
 async def import_excel_form(request: Request):
-    """Страница импорта данных из файла"""
-    return templates.TemplateResponse("import_excel_form.html", {"request": request})
+    context = {
+        "request": request,
+        "url": "/data/list_gup/Списочный_состав.xlsx",  # Полный путь до файла
+        "filename": "Списочный_состав.xlsx",  # Имя файла для загрузки
+        "display_text": "Скачать список сотрудников"  # Отображаемый текст ссылки
+    }
+    return templates.TemplateResponse("import_excel_form.html", context)
 
 
 @app.post("/import_excel")
@@ -140,19 +150,18 @@ async def action(request: Request, user_input: str = Form(...)):
             await filling_ditional_agreement_health_reasons()
         elif user_input == 11:  # Дополнительное соглашение на перевод на другую должность (профессию)
             await formation_and_filling_of_employment_contracts_for_transfer_to_another_job()
-
         elif user_input == 12:  # Переход для формирования трудовых договоров и дополнительных соглашений
             return RedirectResponse(url="/formation_employment_contracts", status_code=303)
-
         elif user_input == 13:  # Переход для парсинга данных из файла
             await filling_notifications()  # Заполнение уведомлений для сотрудников
-
-
         elif user_input == 15:  # Формирование уведомление о сокращении
             await formation_reduction_notification()
-
         elif user_input == 17:  # Сверка уведомлений
             await get_missing_ids()
+
+        elif user_input == 18:  # Парсинг адресов для конверта
+            logger.info("Пользователь запустил (Парсинг адресов для конверта)")
+            await address_parsing()
 
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:

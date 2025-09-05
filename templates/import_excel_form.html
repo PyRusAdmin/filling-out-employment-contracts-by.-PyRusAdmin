@@ -8,15 +8,26 @@
 
 </head>
 <body>
+
+<h1>Импорт данных из Excel</h1>
+<p>Выберите диапазон строк, которые хотите импортировать:</p>
+
 <form action="/import_excel" method="post">
     <fieldset>
         <legend>Введите данные</legend>
         <label for="min_row">Начальная строка</label>
-        <input id="min_row" name="min_row" type="number" required/><br><br>
+        <input id="min_row" name="min_row" type="number" required/>
+        <br><br>
+
         <label for="max_row">Конечная строка</label>
-        <input id="max_row" name="max_row" type="number" required/><br><br>
+        <input id="max_row" name="max_row" type="number" required/>
+        <br><br>
 
         <button class="custom-button" type="submit">Записать данные</button>
+        <br><br>
+
+        <a href="{{ url }}" download="{{ filename }}">{{ display_text }}</a>
+
     </fieldset>
 </form>
 </body>
