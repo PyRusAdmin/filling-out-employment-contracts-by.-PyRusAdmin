@@ -25,10 +25,8 @@ from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_
 app = FastAPI()
 # Монтируем статические файлы из папки "static"
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 # Монтируем папку data
 app.mount("/data", StaticFiles(directory="data"), name="data")
-
 templates = Jinja2Templates(directory="templates")
 progress_messages = []  # список сообщений, которые будут отображаться в progress
 
