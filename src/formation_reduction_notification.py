@@ -7,9 +7,9 @@ from src.filling_data import generate_documents, format_date
 
 
 async def formation_reduction_notification():
-    logger.info("Пользователь выбрал формирование уведомление о сокращении")
+    """Заполнение уведомлений о сокращении штата"""
 
-    """Заполнение уведомлений"""
+    logger.info("Пользователь выбрал формирование уведомление о сокращении")
 
     start = datetime.now()
     logger.info(f"Время старта: {start}")
@@ -17,13 +17,13 @@ async def formation_reduction_notification():
     for row in data:
         logger.info(row)
         ending = "ый" if row.a11 == "Мужчина" else "ая"
-
+        logger.info(row.a7)
         await generate_documents(
             row=row,
             formatted_date=await format_date(row.a7),
             ending=ending,
             file_dog="data/templates_contracts/Сокращение/уведомления.docx",  # шаблон уведомления
-            output_path="data/outgoing/Готовые_уведомления_сокращение"  # папка для сохранения уведомления
+            output_path="output/Готовые_уведомления_сокращение"  # папка для сохранения уведомления
         )
 
     finish = datetime.now()

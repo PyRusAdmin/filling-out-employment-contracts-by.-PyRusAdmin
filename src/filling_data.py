@@ -69,7 +69,7 @@ async def filling_notifications():
             formatted_date=await format_date(row.a7),
             ending=ending,
             file_dog="data/templates_contracts/уведомления/уведомление.docx",
-            output_path="data/outgoing/Готовые_уведомления"
+            output_path="output/Готовые_уведомления"
         )
 
     finish = datetime.now()
