@@ -20,7 +20,7 @@ async def get_missing_ids():
         logger.error(f"Ошибка парсинга JSON: {e}")
         return
 
-    folder = "data/outgoing/Готовые_уведомления_сокращение"
+    folder = "output/Готовые_уведомления_сокращение"
     file_ids = {}
 
     # Собираем ID файлов и их имена

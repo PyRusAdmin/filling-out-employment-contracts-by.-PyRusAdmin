@@ -120,6 +120,12 @@ async def formation_employment_contracts(request: Request):
     return templates.TemplateResponse("formation_employment_contracts.html", {"request": request})
 
 
+
+@app.get('/notification_compression', response_class=HTMLResponse)
+async def notification_compression(request: Request):
+    """Формирование уведомления о сокращении"""
+    return templates.TemplateResponse("notification_compression.html", {"request": request})
+
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
     """Выполнение действий"""
@@ -160,6 +166,8 @@ async def action(request: Request, user_input: str = Form(...)):
         elif user_input == 18:  # Парсинг адресов для конверта
             logger.info("Пользователь запустил (Парсинг адресов для конверта)")
             await address_parsing()
+        elif user_input == 19:  # Формирование уведомления на сокращение
+            return RedirectResponse(url="/notification_compression", status_code=303)
 
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:

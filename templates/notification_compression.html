@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формирование уведомления о сокращении</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/styles.css"> <!-- Стиль проекта -->
+</head>
+<body>
+<div class="app-container">
+    <header>
+        <h1>Формирование уведомления о сокращении</h1>
+    </header>
+
+
+        Для формирование уведомления о сокращении, выполните следующие действия:
+    <ol>
+        <li>Заполнить данные в списочный состав <code>data/list_gup/Списочный_состав.xlsx</code>.</li>
+        <li>Очистить базу данных <code>data/contracts.db</code>, нажатием кнопки "Очистка данных".</li>
+        <li>Записать данные со списочного состава в базу данных, нажатием кнопки "Запись данных в базу данных".</li>
+        <li>Сформировать уведомление о сокращении, нажатием кнопки "Уведомление на сокращение".</li>
+        <li>Сверить полученные уведомления, нажатием кнопки "Уведомление на сокращение".</li>
+    </ol>
+        Готовые уведомления будут сохранены в папке <code>output/Готовые_уведомления_сокращение</code>.
+    <br><br>
+    <div class="grid-container">
+        <!--        Заполнение уведомлений на сокращение договоров-->
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-broom"></i></div>
+            <div class="feature-title">Очистка данных</div>
+            <div class="feature-description">Удаление устаревших записей из базы данных</div>
+            <button class="action-button" onclick="handleAction(7)">Очистить БД</button>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-database"></i></div>
+            <div class="feature-title" style="color: red;">Запись данных в базу данных</div>
+            <div class="feature-description" style="color: red;">Запись данных в базу данных</div>
+            <button class="action-button" onclick="location.href='/import_excel_form'">Работа с БД</button>
+        </div>
+
+        <!--Уведомление о сокращении-->
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+            <div class="feature-title">Уведомление на сокращение</div>
+            <div class="feature-description">Уведомление на сокращение</div>
+            <button class="action-button" onclick="handleAction(15)">Сформировать уведомление</button>
+        </div>
+
+        <!-- Сверка уведомлений с JSON -->
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-file-excel"></i></div>
+            <div class="feature-title">Сверка уведомлений</div>
+            <div class="feature-description">Удаление лишних файлов и создание missing.txt</div>
+            <button class="action-button" onclick="handleAction(17)">Запустить</button>
+        </div>
+
+    </div>
+
+    <footer>
+        © 2024 Программа для автоматизации задач предприятия. Все права защищены.
+    </footer>
+</div>
+<script src="/static/script.js"></script> <!-- Скрипт для обработки действий -->
+</body>
+</html>
