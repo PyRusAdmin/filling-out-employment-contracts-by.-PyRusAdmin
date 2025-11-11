@@ -13,11 +13,13 @@ from loguru import logger
 from src.address_parsing import address_parsing
 from src.checking_availability import get_missing_ids
 from src.database import import_excel_to_db, database_cleaning_function
-from src.filling_data import (formation_employment_contracts_filling_data,
-                              formation_and_filling_of_employment_contracts_for_idle_time_enterprise,
-                              formation_and_filling_of_part_time_employment_contracts,
-                              formation_and_filling_of_employment_contracts_for_transfer_to_another_job,
-                              filling_ditional_agreement_health_reasons, filling_notifications)
+from src.filling_data import (
+    formation_employment_contracts_filling_data,
+    formation_and_filling_of_employment_contracts_for_idle_time_enterprise,
+    formation_and_filling_of_part_time_employment_contracts,
+    formation_and_filling_of_employment_contracts_for_transfer_to_another_job,
+    filling_ditional_agreement_health_reasons, filling_notifications
+)
 from src.formation_reduction_notification import formation_reduction_notification
 from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
@@ -120,11 +122,11 @@ async def formation_employment_contracts(request: Request):
     return templates.TemplateResponse("formation_employment_contracts.html", {"request": request})
 
 
-
 @app.get('/notification_compression', response_class=HTMLResponse)
 async def notification_compression(request: Request):
     """Формирование уведомления о сокращении"""
     return templates.TemplateResponse("notification_compression.html", {"request": request})
+
 
 @app.post("/action", response_class=HTMLResponse)
 async def action(request: Request, user_input: str = Form(...)):
