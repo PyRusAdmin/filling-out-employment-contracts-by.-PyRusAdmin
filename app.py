@@ -18,7 +18,8 @@ from src.filling_data import (
     formation_and_filling_of_employment_contracts_for_idle_time_enterprise,
     formation_and_filling_of_part_time_employment_contracts,
     formation_and_filling_of_employment_contracts_for_transfer_to_another_job,
-    filling_ditional_agreement_health_reasons, filling_notifications
+    filling_ditional_agreement_health_reasons, filling_notifications,
+    filling_ditional_agreement_health_reasons_agreement_health
 )
 from src.formation_reduction_notification import formation_reduction_notification
 from src.get import Employee
@@ -170,6 +171,9 @@ async def action(request: Request, user_input: str = Form(...)):
             await address_parsing()
         elif user_input == 19:  # Формирование уведомления на сокращение
             return RedirectResponse(url="/notification_compression", status_code=303)
+
+        elif user_input == 20:  # Заполнение дополнительного соглашения
+            await filling_ditional_agreement_health_reasons_agreement_health()
 
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:

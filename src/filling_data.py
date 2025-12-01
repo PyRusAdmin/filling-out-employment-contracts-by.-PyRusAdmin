@@ -162,6 +162,29 @@ async def creation_contracts_additional_agreement(row, formatted_date, ending):
         logger.exception(f"Ошибка при формировании договора для табельного номера {row.a4_табельный_номер}: {e}")
 
 
+# Дополнительное соглашение на расширение зоны обслуживания
+
+data_list = [23495]
+
+async def creation_contracts_additional_agreement_health(row, formatted_date, ending):
+    """Формирование дополнительного соглашения на расширение зоны обслуживания"""
+    try:
+        # Проверяем, входит ли табельный номер
+        if int(row.a4_табельный_номер) in data_list:
+            await generate_documents(
+                row=row,
+                formatted_date=formatted_date,
+                ending=ending,
+                file_dog="data/docs_templates/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_расширение_зоны_обслуживания.docx",
+                output_path="output/доп_согл_нпн"
+            )
+        else:
+            logger.info(f"Табельный номер {row.a4_табельный_номер} не входит в список. Договор не будет сформирован.")
+    except Exception as e:
+        logger.exception(f"Ошибка при формировании договора для табельного номера {row.a4_табельный_номер}: {e}")
+
+
+
 async def filling_ditional_agreement_health_reasons():
     """Заполнение дополнительного соглашения по состоянию здоровья"""
     start = datetime.now()
@@ -174,6 +197,21 @@ async def filling_ditional_agreement_health_reasons():
     finish = datetime.now()
     logger.info(f"Время окончания: {finish}")
     logger.info(f"Время работы: {finish - start}")
+
+
+async def filling_ditional_agreement_health_reasons_agreement_health():
+    """Заполнение дополнительного соглашения за расширение зоны обслуживания"""
+    start = datetime.now()
+    logger.info(f"Время старта: {start}")
+    data = await read_from_db()
+    for row in data:
+        logger.info(row)
+        ending = "ый" if row.a11 == "Мужчина" else "ая"
+        await creation_contracts_additional_agreement_health(row, await format_date(row.a7), ending)
+    finish = datetime.now()
+    logger.info(f"Время окончания: {finish}")
+    logger.info(f"Время работы: {finish - start}")
+
 
 
 async def formation_and_filling_of_employment_contracts_for_transfer_to_another_job():
