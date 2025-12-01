@@ -68,7 +68,7 @@ async def filling_notifications():
             row=row,
             formatted_date=await format_date(row.a7),
             ending=ending,
-            file_dog="data/templates_contracts/уведомления/уведомление.docx",
+            file_dog="data/docs_templates/уведомления/уведомление.docx",
             output_path="output/Готовые_уведомления"
         )
 
@@ -89,7 +89,7 @@ async def creation_contracts_downtime(row, formatted_date, ending):
                 row=row,
                 formatted_date=formatted_date,
                 ending=ending,
-                file_dog="data/templates_contracts/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_простой.docx",
+                file_dog="data/docs_templates/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_простой.docx",
                 output_path="data/outgoing/Готовые_дополнительные_договора"
             )
         else:
@@ -111,7 +111,7 @@ async def creation_contracts_downtime_week(row, formatted_date, ending):
                 row=row,
                 formatted_date=formatted_date,
                 ending=ending,
-                file_dog="data/templates_contracts/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_неп_раб_время.docx",
+                file_dog="data/docs_templates/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_неп_раб_время.docx",
                 output_path="data/outgoing/Готовые_дополнительные_соглашения_не_полная_рабочая_неделя"
             )
         else:
@@ -132,7 +132,7 @@ async def creation_contracts_another_job(row, formatted_date, ending):
                 row=row,
                 formatted_date=formatted_date,
                 ending=ending,
-                file_dog="data/templates_contracts/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_перевод.docx",
+                file_dog="data/docs_templates/Шаблоны_доп_соглашений/доп_соглашение_к_труд_дог_перевод.docx",
                 output_path="data/outgoing/Готовые_дополнительные_соглашения_перевод_на_другую_работу"
             )
         else:
@@ -153,7 +153,7 @@ async def creation_contracts_additional_agreement(row, formatted_date, ending):
                 row=row,
                 formatted_date=formatted_date,
                 ending=ending,
-                file_dog="data/templates_contracts/договоры_компенсации/расторжение_ЗД.docx",
+                file_dog="data/docs_templates/договоры_компенсации/расторжение_ЗД.docx",
                 output_path="data/outgoing/доп_согл_нпн"
             )
         else:
@@ -274,7 +274,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_уборщ_8_часов":  # 12 часов
@@ -282,7 +282,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_уборщ_8_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_уборщ_8_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif (
@@ -292,7 +292,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_12_часов":  # 12 часов
@@ -300,7 +300,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_12_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_12_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_6_часов":  # 6 часов
@@ -308,7 +308,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_6_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_6_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_7_часов":
@@ -316,7 +316,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_7_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_7_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7":
@@ -324,7 +324,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_водителя_8_часов":
@@ -332,7 +332,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_водителя_8_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_водителя_8_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_без_вредности":
@@ -340,7 +340,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/ИТР/Шаблон_трудовой_договор_8_часов_ИТР_без_вредности.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
 
@@ -349,7 +349,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_24_часа_без_вредн.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_24_часа_без_вредн.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
 
@@ -359,7 +359,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_уборщ_8_часов":  # 12 часов
@@ -367,7 +367,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contractsШаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_уборщ_8_часов.docx",
+                        file_dog="data/docs_templatesШаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_уборщ_8_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_подземные":  # 12 часов
@@ -375,7 +375,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contractsШаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_подземные.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_12_часов":  # 12 часов
@@ -383,7 +383,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_12_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_12_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
 
@@ -392,7 +392,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/ТД_6_час.раб..docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/ТД_6_час.раб..docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
 
@@ -401,7 +401,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_7_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_7_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7":
@@ -409,7 +409,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contractsШаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx",
+                        file_dog="data/docs_templatesШаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_8_часов_ИТР_контора_вредность_не_норм_7.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
                 elif row.a34 == "Шаблон_трудовой_договор_водителя_8_часов":
@@ -417,7 +417,7 @@ async def creation_contracts(row, formatted_date, ending):
                         row=row,
                         formatted_date=formatted_date,
                         ending=ending,
-                        file_dog="data/templates_contracts/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_водителя_8_часов.docx",
+                        file_dog="data/docs_templates/Шаблоны_трудовых_договоров/Рабочий/Шаблон_трудовой_договор_водителя_8_часов.docx",
                         output_path="data/outgoing/Готовые_договора"
                     )
 
