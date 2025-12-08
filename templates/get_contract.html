@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <title>Получение трудового договора</title>
     <link rel="stylesheet" href="/static/styles.css">
+
+
+    <style>
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .message.warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+    </style>
+
 </head>
 <body>
 <div class="app-container">
@@ -12,22 +41,58 @@
     </header>
     <div class="grid-container">
         <div class="feature-card">
+
+            <!-- Сообщения об ошибках, предупреждения и успехе -->
+            {% if error %}
+            <div class="message error">
+                <strong>Ошибка:</strong> {{ error }}
+            </div>
+            {% endif %}
+
+            {% if warning %}
+            <div class="message warning">
+                <strong>Внимание:</strong> {{ warning }}
+            </div>
+            {% endif %}
+
+            {% if success %}
+            <div class="message success">
+                <strong>Успешно:</strong> {{ success }}
+                {% if download_url %}
+                <div style="margin-top: 15px;">
+                    <a href="{{ download_url }}" class="action-button primary" download>
+                        📥 Скачать договор: {{ filename }}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <form action="/get_contract" method="POST">
                 <fieldset>
                     <legend>Получение договора</legend>
                     <div class="form-group">
-                        <label for="tab_number">Табельный номер (4-8 символов):</label>
-                        <input type="text" id="tab_number" name="tab_number" required minlength="4" maxlength="8"
-                               size="10">
+                        <label for="tab_number">Табельный номер:</label>
+                        <input
+                                type="text"
+                                id="tab_number"
+                                name="tab_number"
+                                required
+                                minlength="4"
+                                maxlength="8"
+                                pattern="[0-9]+"
+                                title="Только цифры"
+                                placeholder="Введите табельный номер"
+                        >
                     </div>
                     <div class="buttons-container primary">
                         <button type="submit" class="action-button primary">Получить договор</button>
                     </div>
                     <div class="buttons-container secondary">
-                        <button onclick="window.location.href='/'" class="action-button secondary">На главную страницу
+                        <button type="button" onclick="window.location.href='/'" class="action-button secondary">
+                            На главную страницу
                         </button>
                     </div>
-
                 </fieldset>
             </form>
         </div>

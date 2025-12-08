@@ -9,6 +9,7 @@ from src.get import Employee
 db = SqliteDatabase("data/contracts.db")
 
 
+
 class Employee(Model):
     a0 = CharField(null=True)
     a1 = CharField(null=True)
@@ -51,8 +52,8 @@ class Employee(Model):
 
 
 # Функция для импорта данных из Excel в базу данных
-async def import_excel_to_db(min_row, max_row):
-    file = "data/list_gup/Списочный_состав.xlsx"
+async def import_excel_to_db(min_row, max_row, file):
+
     wb = op.load_workbook(file)
     ws = wb.active
 

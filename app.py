@@ -24,6 +24,9 @@ from src.filling_data import (
 from src.formation_reduction_notification import formation_reduction_notification
 from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
+from src.receipt_contract import process_contracts_from_excel, process_single_contract  # ДОБАВЛЕНО
+
+file = "data/list_gup/Списочный_состав.xlsx"
 
 app = FastAPI()
 # Монтируем статические файлы из папки "static"
@@ -63,7 +66,9 @@ async def import_excel(min_row: int = Form(...), max_row: int = Form(...)):
     """Импорт данных из файла"""
     try:
         logger.info(f"Запуск импорта данных с {min_row} по {max_row} строки.")
-        await import_excel_to_db(min_row=min_row, max_row=max_row)
+
+        await import_excel_to_db(min_row=min_row, max_row=max_row, file=file)
+
         return RedirectResponse(url="/", status_code=303)
     except Exception as e:
         logger.exception("Ошибка при импорте данных.")
@@ -84,37 +89,96 @@ async def get_contract_form(request: Request):
     return templates.TemplateResponse("get_contract.html", {"request": request})
 
 
-@app.post("/get_contract", response_class=HTMLResponse)
-async def get_contract(request: Request, tab_number: str = Form(...), ):
-    """Получение данных сотрудника"""
-    logger.info(f"Введенный табельный номер: {tab_number}")
-    if tab_number:
-        data = search_employee_by_tab_number(tab_number)
-        if data:
-            return templates.TemplateResponse("contract_data.html", {
-                "request": request,
-                "tab_number": tab_number,
-                "data": {
-                    'КСП': data.a0, 'наименование ксп': data.a1, 'Категория': data.a2, 'профессия': data.a3,
-                    'Таб №': data.a4_табельный_номер, 'Ф.И.О.': data.a5, 'Ф.И.О. (сокращенно)': data.a6,
-                    'Дата приема': data.a7, 'Дата увольнения': data.a8, 'Тариф / Оклад': data.a9,
-                    'Дата рождения': data.a10, 'ПОЛ': data.a11,
-                    'Телефон': data.a12, 'Адрес': data.a13, 'Серия код': data.a14, 'Дата выдачи': data.a15,
-                    'Кем выдан': data.a16, 'Код подразделения': data.a17,
-                    'Продолжительность рабочего дня': data.a18, 'Окончание': data.a19,
-                    'За ненорм.': data.a20, 'Особый характер труда': data.a21,
-                    'За вредные условия труда': data.a22, 'Начальники': data.a23,
-                    'Статус': data.a24, 'Номер договора': data.a25_номер_договора,
-                    'Профессия': data.a26, 'Профессия с разрядами': data.a27,
-                    'Профессия в родительном падеже': data.a28, 'Дополнительный отпуск': data.a29,
-                    'дата договора': data.a30, 'Готовность': data.a31,
-                    'Дата перевода (приема) и номер приказа': data.a32, 'Договор / дополнительное соглашение': data.a33,
-                    'Тип шаблона': data.a34
+@app.post("/get_contract")
+async def get_contract_process(
+        tab_number: str = Form(...),
+        request: Request = None
+):
+    """Обработка получения договора по табельному номеру"""
+    try:
+        logger.info(f"Запрос на получение договора для табельного номера: {tab_number}")
+
+        # Проверяем валидность табельного номера
+        if not tab_number.isdigit():
+            logger.error(f"Некорректный табельный номер: {tab_number}")
+            return templates.TemplateResponse(
+                "get_contract.html",
+                {
+                    "request": request,
+                    "error": "Табельный номер должен содержать только цифры"
                 }
-            })
+            )
+
+        # Обрабатываем один договор
+        result = process_single_contract(file, int(tab_number))
+
+        if result is False:  # Сотрудник не найден
+            return templates.TemplateResponse(
+                "get_contract.html",
+                {
+                    "request": request,
+                    "error": f"Сотрудник с табельным номером {tab_number} не найден"
+                }
+            )
+        elif result is None:  # Договор уже напечатан
+            return templates.TemplateResponse(
+                "get_contract.html",
+                {
+                    "request": request,
+                    "warning": f"Договор для табельного номера {tab_number} уже был напечатан"
+                }
+            )
+        elif isinstance(result, str):  # Путь к файлу
+            # Получаем имя файла из пути
+            filename = os.path.basename(result)
+
+            return templates.TemplateResponse(
+                "get_contract.html",
+                {
+                    "request": request,
+                    "success": f"Договор для табельного номера {tab_number} успешно создан!",
+                    "download_url": f"/download_contract/{filename}",
+                    "filename": filename
+                }
+            )
         else:
-            return {"message": f"Данные для табельного номера {tab_number} не найдены."}
-    raise HTTPException(status_code=400, detail="Табельный номер не указан.")
+            return templates.TemplateResponse(
+                "get_contract.html",
+                {
+                    "request": request,
+                    "success": f"Договор для табельного номера {tab_number} успешно создан!"
+                }
+            )
+
+    except Exception as e:
+        logger.exception(f"Ошибка при обработке договора: {e}")
+        return templates.TemplateResponse(
+            "get_contract.html",
+            {
+                "request": request,
+                "error": f"Произошла ошибка при создании договора: {str(e)}"
+            }
+        )
+
+
+@app.get("/download_contract/{filename}")
+async def download_contract(filename: str):
+    """Скачивание созданного договора"""
+    try:
+        file_path = f"data/outgoing/Готовые_договора/{filename}"
+
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail="Файл не найден")
+
+        return FileResponse(
+            file_path,
+            filename=filename,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+
+    except Exception as e:
+        logger.exception(f"Ошибка при скачивании файла: {e}")
+        raise HTTPException(status_code=500, detail="Ошибка при скачивании файла")
 
 
 @app.get("/formation_employment_contracts", response_class=HTMLResponse)
@@ -143,8 +207,10 @@ async def action(request: Request, user_input: str = Form(...)):
             await compare_and_rewrite_professions()
         elif user_input == 4:
             return RedirectResponse(url="/import_excel_form", status_code=303)
-        elif user_input == 5:
+
+        elif user_input == 5:  # Получение договора
             return RedirectResponse(url="/get_contract", status_code=303)
+
         elif user_input == 6:  # Добавьте обработчик для выхода
             return RedirectResponse(url="/", status_code=303)
         elif user_input == 7:  # Очистка базы данных

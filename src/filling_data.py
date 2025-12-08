@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-import openpyxl as op
+# import openpyxl as op
 from docxtpl import DocxTemplate
 from loguru import logger
 
@@ -272,17 +272,17 @@ async def format_date(date):
     return '" {:02d} " {} {} г.'.format(date.day, months[date.month], date.year)
 
 
-async def open_list_gup():
-    file = "data/list_gup/Списочный_состав.xlsx"
-    wb = op.load_workbook(file)  # открываем файл
-    ws = wb.active  # открываем активную таблицу
-    list_gup = []  # создаем список
-    for row in ws.iter_rows(
-            min_row=5, max_row=1112, min_col=0, max_col=34
-    ):  # перебираем строки
-        row_data = [cell.value for cell in row]  # создаем список
-        list_gup.append(row_data)  # добавляем в список
-    return list_gup  # возвращаем список
+# async def open_list_gup():
+#     file = "data/list_gup/Списочный_состав.xlsx"
+#     wb = op.load_workbook(file)  # открываем файл
+#     ws = wb.active  # открываем активную таблицу
+#     list_gup = []  # создаем список
+#     for row in ws.iter_rows(
+#             min_row=5, max_row=1112, min_col=0, max_col=34
+#     ):  # перебираем строки
+#         row_data = [cell.value for cell in row]  # создаем список
+#         list_gup.append(row_data)  # добавляем в список
+#     return list_gup  # возвращаем список
 
 
 async def formation_employment_contracts_filling_data():
