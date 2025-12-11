@@ -24,7 +24,7 @@ from src.filling_data import (
 from src.formation_reduction_notification import formation_reduction_notification
 from src.get import Employee
 from src.parsing_comparison_file import parsing_document_1, compare_and_rewrite_professions
-from src.receipt_contract import process_contracts_from_excel, process_single_contract  # ДОБАВЛЕНО
+from src.receipt_contract import process_single_contract  # ДОБАВЛЕНО
 
 file = "data/list_gup/Списочный_состав.xlsx"
 
